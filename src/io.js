@@ -1,7 +1,7 @@
 const DEFAULT_OPTIONS = {
   timeout: 1000,
   once: true,
-  intersectTime: 500,
+  intersectTime: 250,
   observer: {},
   onIntersection: console.log,
 };
