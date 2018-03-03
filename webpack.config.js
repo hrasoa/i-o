@@ -5,7 +5,7 @@ module.exports = {
   mode: 'development',
   devtool: 'source-map',
   devServer: {
-    contentBase: './dist'
+    contentBase: './dist',
   },
   module: {
     rules: [
@@ -13,19 +13,19 @@ module.exports = {
         test: /\.js$/,
         loader: 'babel-loader',
         options: {
-          presets: ['@babel/preset-env']
-        }
-      }
-    ]
+          presets: ['@babel/preset-env'],
+        },
+      },
+    ],
   },
   plugins: [
     new HtmlWebpackPlugin({
       title: 'Development',
-      template: 'public/index.html'
+      template: 'public/index.html',
     }),
   ],
   output: {
     filename: 'io.js',
-    path: path.resolve(__dirname, 'dist')
-  }
+    path: path.resolve(__dirname, 'dist'),
+  },
 };
