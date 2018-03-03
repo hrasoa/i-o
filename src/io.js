@@ -4,6 +4,8 @@ const EVENT_NAME = 'io.visible';
 
 const DEFAULT_OPTIONS = {
   timeout: 1000,
+  once: true,
+  observer: {},
 };
 
 class Io {
@@ -12,7 +14,7 @@ class Io {
     this.eventName = EVENT_NAME;
     this.entries = {};
     this.handleVisible = this.handleVisible.bind(this);
-    this.api = new Observer(this.handleVisible, options.observer);
+    this.api = new Observer(this.handleVisible, this.options.observer);
   }
 
   handleVisible(entries) {
@@ -26,7 +28,10 @@ class Io {
         this.entries[id].timerId = setTimeout(() => {
           const event = new CustomEvent(this.eventName, { detail: entry });
           target.dispatchEvent(event);
-          this.unobserve(target, id);
+
+          if (this.entries[id].options.once === true || this.options.once === true) {
+            this.unobserve(target, id);
+          }
         }, this.options.timeout);
       }
 
@@ -45,7 +50,7 @@ class Io {
     return `entry-${Object.keys(this.entries).length}`;
   }
 
-  observe(target, cb, options) {
+  observe(target, cb, options = {}) {
     const id = this.getEntryId();
     this.entries[id] = { cb, options };
     target.setAttribute('data-entry-id', id);
