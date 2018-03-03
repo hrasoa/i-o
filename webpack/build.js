@@ -34,6 +34,6 @@ module.exports = {
     filename: 'io.js',
     library: 'Io',
     libraryTarget: 'var',
-    path: path.resolve(__dirname, 'dist'),
+    path: path.resolve(__dirname, '../dist'),
   },
 };

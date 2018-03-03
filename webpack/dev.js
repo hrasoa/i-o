@@ -1,4 +1,4 @@
-const config = require('./webpack.build.js');
+const config = require('./build.js');
 
 module.exports = {
   mode: 'development',
