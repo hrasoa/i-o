@@ -2,12 +2,17 @@ import Observer from './observer';
 
 const EVENT_NAME = 'io.visible';
 
+const DEFAULT_OPTIONS = {
+  timeout: 1000,
+};
+
 class Io {
-  constructor() {
+  constructor(options) {
+    this.options = { DEFAULT_OPTIONS, ...options };  
     this.eventName = EVENT_NAME;
     this.entries = {};
     this.handleVisible = this.handleVisible.bind(this);
-    this.api = new Observer(this.handleVisible);
+    this.api = new Observer(this.handleVisible, options.observer);
   }
 
   handleVisible(entries) {
