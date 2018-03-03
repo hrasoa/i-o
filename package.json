@@ -1,0 +1,41 @@
+{
+  "name": "@hrasoa/io",
+  "version": "0.0.0-8",
+  "description": "IntersectionObserver generic library",
+  "main": "src/io.js",
+  "files": [
+    "dist",
+    "public",
+    "src"
+  ],
+  "scripts": {
+    "build": "NODE_ENV=production webpack --config webpack/build.js",
+    "lint": "eslint src/**",
+    "start": "webpack-dev-server --config webpack/dev.js --open",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/hrasoa/io.git"
+  },
+  "author": "Haja Rasoahaingo",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/hrasoa/io/issues"
+  },
+  "homepage": "https://github.com/hrasoa/io#readme",
+  "devDependencies": {
+    "@babel/core": "^7.0.0-beta.40",
+    "@babel/preset-env": "^7.0.0-beta.40",
+    "@babel/preset-stage-3": "^7.0.0-beta.40",
+    "babel-eslint": "^8.2.2",
+    "babel-loader": "8.0.0-beta.0",
+    "eslint": "^4.18.2",
+    "eslint-config-airbnb-base": "^12.1.0",
+    "eslint-plugin-import": "^2.9.0",
+    "html-webpack-plugin": "^3.0.4",
+    "webpack": "^4.0.1",
+    "webpack-cli": "^2.0.10",
+    "webpack-dev-server": "^3.1.0"
+  }
+}
