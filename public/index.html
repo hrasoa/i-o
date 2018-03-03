@@ -43,13 +43,13 @@
     <% } %>
     <script>
       const images = document.querySelectorAll('img');
-      const lazyImages = new Io({
+      const io = new Io({
         onIntersection: function(entry) {
           entry.target.setAttribute('src', entry.target.getAttribute('data-src'));
         },
       });
-      lazyImages.observe(images[0]);
-      lazyImages.observe(images[1]);
+      io.observe(images[0]);
+      io.observe(images[1]);
     </script>
   </body>
 </html>
