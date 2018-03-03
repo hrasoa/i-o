@@ -12,8 +12,7 @@ class Io {
   constructor(options) {
     this.options = { ...DEFAULT_OPTIONS, ...options };
     this.entries = {};
-    this.handleIntersection = this.handleIntersection.bind(this);
-    this.api = new IntersectionObserver(this.handleIntersection, this.options.observer);
+    this.api = new IntersectionObserver(this.handleIntersection.bind(this), this.options.observer);
   }
 
   handleIntersection(entries) {
@@ -29,11 +28,9 @@ class Io {
           this.handleOnIntersection.bind(this, id, entry, options),
           options.timeout,
         );
-        console.log(id, this.entries[id].timerId);
       }
 
-      if (this.entries[id].timerId && !isIntersecting && lastIn - lastOut < options.intersectTime) {
-        console.log(id, this.entries[id].timerId);
+      if (!isIntersecting && lastIn - lastOut < options.intersectTime) {        
         clearTimeout(this.entries[id].timerId);
       }
     });
