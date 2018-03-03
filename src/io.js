@@ -2,8 +2,8 @@ const DEFAULT_OPTIONS = {
   observer: {},
   once: true,
   onIntersection: console.log,
-  onIntersectionTimeout: 1000,
-  intersectionCancelTime: 250,
+  delay: 1000,
+  intersectionTime: 250,
 };
 
 const DATA_ATTRIBUTE_ID = 'data-io-id';
@@ -33,11 +33,11 @@ class Io {
     if (isIntersecting) {
       this.entries[id].timerId = setTimeout(
         this.onIntersection.bind(this, id, entry, options),
-        options.onIntersectionTimeout,
+        options.delay,
       );
     }
 
-    if (!isIntersecting && lastIn - lastOut < options.intersectionCancelTime) {
+    if (!isIntersecting && lastIn - lastOut < options.intersectionTime) {
       clearTimeout(this.entries[id].timerId);
     }
   }
