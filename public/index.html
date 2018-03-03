@@ -14,16 +14,21 @@
     }
     img {
       min-height: 200px;
+      opacity: 0;
+      transition: opacity .4s;
+    }
+    img[src] {
+      opacity: 1;
     }
   </style>
   </head>
   <body>
     <ul>
       <li>
-        <img data-src="https://picsum.photos/400/250?image=0" />
+        <img width="400" data-src="https://picsum.photos/400/250?image=0" />
       </li>
       <li>
-        <img data-src="https://picsum.photos/400/250?image=2" />
+        <img width="400" data-src="https://picsum.photos/400/250?image=2" />
       </li>
     </ul>
     <% for (var chunk in htmlWebpackPlugin.files.chunks) { %>
