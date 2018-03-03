@@ -3,21 +3,20 @@ import Observer from './observer';
 const EVENT_NAME = 'io.visible';
 
 class Io {
-  constructor(options) {
+  constructor() {
     this.eventName = EVENT_NAME;
     this.entries = {};
     this.handleVisible = this.handleVisible.bind(this);
-    this.api = new Observer(this.handleVisible);        
+    this.api = new Observer(this.handleVisible);
   }
 
   handleVisible(entries) {
-    entries.forEach(entry => {
+    entries.forEach((entry) => {
       const { target, isIntersecting, time } = entry;
-      const id = target.getAttribute('data-entry-id');      
+      const id = target.getAttribute('data-entry-id');
       this.entries[id][isIntersecting ? 'lastIn' : 'lastOut'] = time;
-      const lastIn = this.entries[id].lastOut || 0;
-      const lastOut = this.entries[id].lastIn || 0;
-      
+      const { lastIn = 0, lastOut = 0 } = this.entries[id];
+
       if (isIntersecting) {
         this.entries[id].timerId = setTimeout(() => {
           const event = new CustomEvent(this.eventName, { detail: entry });
@@ -25,7 +24,7 @@ class Io {
           this.unobserve(target, id);
         }, 1000);
       }
-      
+
       if (!isIntersecting && lastIn - lastOut < 150) {
         clearTimeout(this.entries[id].timerId);
       }
@@ -44,7 +43,7 @@ class Io {
   observe(target, cb, options) {
     const id = this.getEntryId();
     this.entries[id] = { cb, options };
-    target.setAttribute('data-entry-id', id);      
+    target.setAttribute('data-entry-id', id);
     target.addEventListener(this.eventName, this.entries[id].cb);
     this.api.observe(target);
   }
