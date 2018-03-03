@@ -12,17 +12,29 @@
       padding-bottom: 120vh;
     }
     ul {
+      counter-reset: listing;
       list-style: none;
-      margin-top: 90vh;      
+      margin-top: 90vh;            
+      margin: auto;
+      max-width: 400px;
       text-align: center;
     }    
     li {
+      counter-increment: listing;
       margin-top: 50vh;
+      position: relative;
+    }
+    li:before {
+      content: "# " counter(listing); 
+      position: absolute;
+      right: 105%;      
+      text-decoration: underline;
+      white-space: nowrap;      
     }
     img {
       display: inline-block;
       max-width: 100%;
-      min-height: 200px;
+      min-height: 250px;
       opacity: 0;
       transition: opacity .6s;
     }
