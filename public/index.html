@@ -30,21 +30,9 @@
       opacity: 1;
     }
     </style>
-    <% for (var chunk in htmlWebpackPlugin.files.chunks) { %>
-    <link rel="preload" as="script" href="/<%= htmlWebpackPlugin.files.chunks[chunk].entry %>">
-    <% } %>
-    <link rel="prefetch" as="image" href="https://picsum.photos/400/250?image=0">
-    <link rel="prefetch" as="image" href="https://picsum.photos/400/250?image=1">
   </head>
   <body>
-    <ul>
-      <li>
-        <img data-src="https://picsum.photos/400/250?image=0" />
-      </li>
-      <li>
-        <img data-src="https://picsum.photos/400/250?image=1" />
-      </li>
-    </ul>
+    <ul></ul>
     <div class="sentinel"></div>
     <% for (var chunk in htmlWebpackPlugin.files.chunks) { %>
       <script src="/<%= htmlWebpackPlugin.files.chunks[chunk].entry %>"></script>
@@ -66,16 +54,13 @@
         onIntersection: function() { addImages(10); }
       });
 
-      io.observe(images[0]);
-      io.observe(images[1]);
-
       function addImages(amount) {
         images = document.querySelectorAll('img');
         var frag = document.createDocumentFragment();
         for (var i = 0; i < amount; i++) {
           var li = document.createElement('li');
           var img = document.createElement('img');
-          img.setAttribute('data-src', 'https://picsum.photos/400/250?image='+ i + images.length);
+          img.setAttribute('data-src', 'https://picsum.photos/400/250?image=' + i + images.length);
           li.appendChild(img);
           io.observe(img);
 	        frag.appendChild(li);
