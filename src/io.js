@@ -8,6 +8,8 @@ const DEFAULT_OPTIONS = {
   observer: {},
 };
 
+const DATA_ATTR_ID = 'data-entry-id';
+
 class Io {
   constructor(options) {
     this.options = { ...DEFAULT_OPTIONS, ...options };  
@@ -20,7 +22,7 @@ class Io {
   handleVisible(entries) {
     entries.forEach((entry) => {
       const { target, isIntersecting, time } = entry;
-      const id = target.getAttribute('data-entry-id');
+      const id = target.getAttribute(DATA_ATTR_ID);
       this.entries[id][isIntersecting ? 'lastIn' : 'lastOut'] = time;
       const { lastIn = 0, lastOut = 0 } = this.entries[id];
 
@@ -53,7 +55,7 @@ class Io {
   observe(target, cb, options = {}) {
     const id = this.getEntryId();
     this.entries[id] = { cb, options };
-    target.setAttribute('data-entry-id', id);
+    target.setAttribute(DATA_ATTR_ID, id);
     target.addEventListener(this.eventName, this.entries[id].cb);
     this.api.observe(target);
   }
