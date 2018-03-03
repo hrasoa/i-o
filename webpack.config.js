@@ -1,4 +1,3 @@
-const HtmlWebpackPlugin = require('html-webpack-plugin');
 const config = require('./webpack.build.js');
 
 module.exports = {
@@ -8,12 +7,7 @@ module.exports = {
     contentBase: './dist',
   },
   module: config.module,
-  plugins: [
-    new HtmlWebpackPlugin({
-      title: 'Development',
-      template: 'public/index.html',
-    }),
-  ],
+  plugins: config.plugins,
   output: {
     filename: config.output.filename,
     path: config.output.path,
