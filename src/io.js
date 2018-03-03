@@ -3,7 +3,7 @@ import Observer from './observer';
 const EVENT_NAME = 'io.visible';
 
 class Io {
-  constructor(props) {
+  constructor(options) {
     this.eventName = EVENT_NAME;
     this.entries = {};
     this.handleVisible = this.handleVisible.bind(this);
@@ -15,6 +15,9 @@ class Io {
       const { target, isIntersecting, time } = entry;
       const id = target.getAttribute('data-entry-id');      
       this.entries[id][isIntersecting ? 'lastIn' : 'lastOut'] = time;
+      const lastIn = this.entries[id].lastOut || 0;
+      const lastOut = this.entries[id].lastIn || 0;
+      
       if (isIntersecting) {
         this.entries[id].timerId = setTimeout(() => {
           const event = new CustomEvent(this.eventName, { detail: entry });
@@ -22,8 +25,7 @@ class Io {
           this.unobserve(target, id);
         }, 1000);
       }
-      const lastIn = this.entries[id].lastOut || 0;
-      const lastOut = this.entries[id].lastIn || 0;
+      
       if (!isIntersecting && lastIn - lastOut < 150) {
         clearTimeout(this.entries[id].timerId);
       }
@@ -35,10 +37,14 @@ class Io {
     target.removeEventListener(this.eventName, this.entries[id].cb);
   }
 
+  getEntryId() {
+    return `entry-${Object.keys(this.entries).length}`;
+  }
+
   observe(target, cb, options) {
-    const id = `entry-${Object.keys(this.entries).length}`;
-    target.setAttribute('data-entry-id', id);  
+    const id = this.getEntryId();
     this.entries[id] = { cb, options };
+    target.setAttribute('data-entry-id', id);      
     target.addEventListener(this.eventName, this.entries[id].cb);
     this.api.observe(target);
   }
