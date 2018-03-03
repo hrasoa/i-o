@@ -72,3 +72,5 @@ function getUniq() {
 }
 
 export default Io;
+
+export { getEntryId, getUniq };
