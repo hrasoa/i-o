@@ -1,5 +1,5 @@
-const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
+const config = require('./webpack.build.js');
 
 module.exports = {
   mode: 'development',
@@ -7,17 +7,7 @@ module.exports = {
   devServer: {
     contentBase: './dist',
   },
-  module: {
-    rules: [
-      {
-        test: /\.js$/,
-        loader: 'babel-loader',
-        options: {
-          presets: ['@babel/preset-env'],
-        },
-      },
-    ],
-  },
+  module: config.module,
   plugins: [
     new HtmlWebpackPlugin({
       title: 'Development',
@@ -25,7 +15,7 @@ module.exports = {
     }),
   ],
   output: {
-    filename: 'io.js',
-    path: path.resolve(__dirname, 'dist'),
+    filename: config.output.filename,
+    path: config.output.path,
   },
 };
