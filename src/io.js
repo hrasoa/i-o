@@ -1,7 +1,7 @@
 const DEFAULT_OPTIONS = {
   timeout: 1000,
   once: true,
-  intersectTime: 150,
+  intersectTime: 500,
   observer: {},
   onIntersect: console.log,
 };
@@ -29,9 +29,11 @@ class Io {
           this.handleOnIntersection.bind(this, id, entry, options),
           options.timeout,
         );
+        console.log(id, this.entries[id].timerId);
       }
 
-      if (!isIntersecting && lastIn - lastOut < options.intersectTime) {
+      if (this.entries[id].timerId && !isIntersecting && lastIn - lastOut < options.intersectTime) {
+        console.log(id, this.entries[id].timerId);
         clearTimeout(this.entries[id].timerId);
       }
     });
@@ -57,11 +59,11 @@ class Io {
 }
 
 function getEntryId() {
-  return `io-${getTimestamp()}`;
+  return `io-${getUniq()}`;
 }
 
-function getTimestamp() {
-  return new Date().getTime();
+function getUniq() {
+  return Math.random().toString(36).substr(2, 9);
 }
 
 export default Io;
