@@ -3,7 +3,7 @@ import Io from './io';
 const images = Array.from(document.querySelectorAll('img'));
 
 const lazyImages = new Io({
-  onIntersect: (entry) => {
+  onIntersection: (entry) => {
     entry.target.setAttribute('src', entry.target.getAttribute('data-src'));
   },
 });
