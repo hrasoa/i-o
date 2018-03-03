@@ -8,10 +8,12 @@
       margin: 0;
       padding: 0;
     }
+    body {
+      padding-top: 120vh;
+    }
     ul {
       list-style: none;
-      margin-top: 120vh;
-      margin-bottom: 120vh;
+      margin-top: 120vh;      
       text-align: center;
     }    
     li {
@@ -27,31 +29,59 @@
     img[src] {
       opacity: 1;
     }
-  </style>
+    </style>
+    <% for (var chunk in htmlWebpackPlugin.files.chunks) { %>
+    <link rel="preload" as="script" href="/<%= htmlWebpackPlugin.files.chunks[chunk].entry %>">
+    <% } %>
+    <link rel="prefetch" as="image" href="https://picsum.photos/400/250?image=0">
+    <link rel="prefetch" as="image" href="https://picsum.photos/400/250?image=1">
   </head>
   <body>
     <ul>
       <li>
-        <img width="400" alt="Img 0" data-src="https://picsum.photos/400/250?image=0" />
-        <noscript><img width="400" alt="Img" src="https://picsum.photos/400/250?image=0" /></noscript>
+        <img data-src="https://picsum.photos/400/250?image=0" />
       </li>
       <li>
-        <img width="400" data-src="https://picsum.photos/400/250?image=2" />
-        <noscript><img width="400" alt="Img 2" src="https://picsum.photos/400/250?image=2" /></noscript>
+        <img data-src="https://picsum.photos/400/250?image=1" />
       </li>
     </ul>
+    <div class="sentinel"></div>
     <% for (var chunk in htmlWebpackPlugin.files.chunks) { %>
       <script src="/<%= htmlWebpackPlugin.files.chunks[chunk].entry %>"></script>
     <% } %>
     <script>
-      const images = document.querySelectorAll('img');
-      const io = new Io({
+      var sentinel = document.querySelector('.sentinel'); 
+      var list = document.querySelector('ul');
+      var images = document.querySelectorAll('img');
+      
+      var io = new Io({
         onIntersection: function(entry) {
           entry.target.setAttribute('src', entry.target.getAttribute('data-src'));
         },
       });
+
+      io.observe(sentinel, {
+        delay: 0,
+        once: false,
+        onIntersection: function() { addImages(10); }
+      });
+
       io.observe(images[0]);
       io.observe(images[1]);
+
+      function addImages(i) {
+        images = document.querySelectorAll('img');
+        var frag = document.createDocumentFragment();
+        for (var i = 0; i < 10; i++) {
+          var li = document.createElement('li');
+          var img = document.createElement('img');
+          img.setAttribute('data-src', 'https://picsum.photos/400/250?image='+ i + images.length);
+          li.appendChild(img);
+          io.observe(img);
+	        frag.appendChild(li);
+        }
+        list.appendChild(frag);
+      }
     </script>
   </body>
 </html>

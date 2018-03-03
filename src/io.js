@@ -2,7 +2,7 @@ const DEFAULT_OPTIONS = {
   observer: {},
   once: true,
   onIntersection: console.log,
-  delay: 1000,
+  delay: 800,
   intersectionTime: 250,
 };
 
