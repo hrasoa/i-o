@@ -27,8 +27,7 @@ module.exports = {
     filename: 'io.js',
     library: {
       root: 'Io',
-      umd: 'Io',
-      commobjs: 'Io',
+      commonjs: 'Io',
     },
     libraryTarget: 'umd',
     path: path.resolve(__dirname, 'dist'),
