@@ -12,7 +12,9 @@ class Io {
   constructor(options) {
     this.options = { ...DEFAULT_OPTIONS, ...options };
     this.entries = {};
-    this.api = new IntersectionObserver(this.handleIntersection.bind(this), this.options.observer);
+    this.api = typeof window !== 'undefined' && window.IntersectionObserver ?
+      new IntersectionObserver(this.handleIntersection.bind(this), this.options.observer) :
+      null;
   }
 
   handleIntersection(entries) {
@@ -53,6 +55,7 @@ class Io {
   }
 
   observe(target, options = {}) {
+    if (!this.api) return;
     const id = getEntryId();
     this.entries[id] = { options };
     target.setAttribute(DATA_ATTRIBUTE_ID, id);
