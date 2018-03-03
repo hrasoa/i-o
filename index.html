@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <title>Io</title>
+    <style>
+    * {
+      margin: 0;
+      padding: 0;
+    }
+    body {
+      padding-bottom: 120vh;
+    }
+    ul {
+      counter-reset: listing;
+      list-style: none;
+      margin-top: 90vh;            
+      margin-left: auto;
+      margin-right: auto;
+      max-width: 400px;
+      text-align: center;
+    }    
+    li {
+      counter-increment: listing;
+      margin-top: 50vh;
+      position: relative;
+    }
+    li:before {
+      content: "# " counter(listing); 
+      position: absolute;
+      right: 105%;      
+      text-decoration: underline;
+      white-space: nowrap;      
+    }
+    img {
+      display: inline-block;
+      max-width: 100%;
+      min-height: 250px;
+      opacity: 0;
+      transition: opacity .6s;
+    }
+    img[src] {
+      opacity: 1;
+    }
+    </style>
+  </head>
+  <body>
+    <ul></ul>
+    <div class="sentinel"></div>
+    
+      <script src="/io.js"></script>
+    
+    <script>
+      var sentinel = document.querySelector('.sentinel'); 
+      var list = document.querySelector('ul');
+      var images = document.querySelectorAll('img');
+      
+      var io = new Io({
+        onIntersection: function(entry) {
+          entry.target.setAttribute('src', entry.target.getAttribute('data-src'));
+        },
+      });
+
+      io.observe(sentinel, {
+        delay: 0,
+        once: false,
+        onIntersection: function() { addImages(10); }
+      });
+
+      function addImages(amount) {
+        images = document.querySelectorAll('img');
+        var frag = document.createDocumentFragment();
+        for (var i = 0; i < amount; i++) {
+          var li = document.createElement('li');
+          var img = document.createElement('img');
+          img.setAttribute('data-src', 'https://picsum.photos/400/250?image=' + i + images.length);
+          li.appendChild(img);
+          io.observe(img);
+          frag.appendChild(li);
+        }
+        list.appendChild(frag);
+      }
+    </script>
+  </body>
+</html>
