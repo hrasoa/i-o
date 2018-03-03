@@ -43,7 +43,8 @@ class Io {
     }
   }
 
-  unobserve(target) {
+  unobserve(target, id) {
+    delete this.entries[id];
     this.api.unobserve(target);
   }
 
