@@ -18,24 +18,28 @@ class Io {
   }
 
   handleIntersection(entries) {
-    entries.forEach((entry) => {
-      const { target, isIntersecting, time } = entry;
-      const id = target.getAttribute(DATA_ATTRIBUTE_ID);
-      const options = { ...this.options, ...this.entries[id].options };
-      this.entries[id][isIntersecting ? 'lastIn' : 'lastOut'] = time;
-      const { lastIn = 0, lastOut = 0 } = this.entries[id];
+    for (let i = entries.length - 1; i >= 0; i -= 1) {
+      this.handleEntryIntersection(entries[i]);
+    }
+  }
 
-      if (isIntersecting) {
-        this.entries[id].timerId = setTimeout(
-          this.onIntersection.bind(this, id, entry, options),
-          options.timeout,
-        );
-      }
+  handleEntryIntersection(entry) {
+    const { target, isIntersecting, time } = entry;
+    const id = target.getAttribute(DATA_ATTRIBUTE_ID);
+    const options = { ...this.options, ...this.entries[id].options };
+    this.entries[id][isIntersecting ? 'lastIn' : 'lastOut'] = time;
+    const { lastIn = 0, lastOut = 0 } = this.entries[id];
 
-      if (!isIntersecting && lastIn - lastOut < options.intersectTime) {        
-        clearTimeout(this.entries[id].timerId);
-      }
-    });
+    if (isIntersecting) {
+      this.entries[id].timerId = setTimeout(
+        this.onIntersection.bind(this, id, entry, options),
+        options.timeout,
+      );
+    }
+
+    if (!isIntersecting && lastIn - lastOut < options.intersectTime) {
+      clearTimeout(this.entries[id].timerId);
+    }
   }
 
   onIntersection(id, entry, options) {
