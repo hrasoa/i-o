@@ -10,7 +10,7 @@ const DEFAULT_OPTIONS = {
 
 class Io {
   constructor(options) {
-    this.options = { DEFAULT_OPTIONS, ...options };  
+    this.options = { ...DEFAULT_OPTIONS, ...options };  
     this.eventName = EVENT_NAME;
     this.entries = {};
     this.handleVisible = this.handleVisible.bind(this);
