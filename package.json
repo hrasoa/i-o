@@ -1,9 +1,14 @@
 {
   "name": "@hrasoa/io",
-  "version": "0.0.0-1",
+  "version": "0.0.0-2",
   "description": "",
   "main": "dist/io.js",
   "module": "src/io.js",
+  "files": [
+    "dist",
+    "public",
+    "src"
+  ],
   "scripts": {
     "build": "NODE_ENV=production webpack --config webpack.build.js",
     "lint": "eslint src/**",
