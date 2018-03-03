@@ -69,10 +69,10 @@
       io.observe(images[0]);
       io.observe(images[1]);
 
-      function addImages(i) {
+      function addImages(amount) {
         images = document.querySelectorAll('img');
         var frag = document.createDocumentFragment();
-        for (var i = 0; i < 10; i++) {
+        for (var i = 0; i < amount; i++) {
           var li = document.createElement('li');
           var img = document.createElement('img');
           img.setAttribute('data-src', 'https://picsum.photos/400/250?image='+ i + images.length);
