@@ -46,11 +46,13 @@ class Io {
   }
 
   unobserve(target, id) {
+    if (!this.api) return;
     delete this.entries[id];
     this.api.unobserve(target);
   }
 
   disconnect() {
+    if (!this.api) return;
     this.api.disconnect();
   }
 
