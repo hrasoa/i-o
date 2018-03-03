@@ -27,7 +27,7 @@ class Io {
           const event = new CustomEvent(this.eventName, { detail: entry });
           target.dispatchEvent(event);
           this.unobserve(target, id);
-        }, 1000);
+        }, this.options.timeout);
       }
 
       if (!isIntersecting && lastIn - lastOut < 150) {
