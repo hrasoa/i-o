@@ -11,7 +11,13 @@ module.exports = {
         loader: 'babel-loader',
         options: {
           presets: [
-            '@babel/preset-env',
+            [
+              '@babel/preset-env', {
+                targets: {
+                  browsers: ['last 2 versions', 'safari >= 7'],
+                },
+              },
+            ],
             '@babel/preset-stage-3',
           ],
         },
@@ -26,7 +32,7 @@ module.exports = {
   ],
   output: {
     filename: 'io.js',
-    library: 'io',
+    library: 'Io',
     libraryTarget: 'umd',
     path: path.resolve(__dirname, 'dist'),
   },
