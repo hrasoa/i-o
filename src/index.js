@@ -1,3 +1,1 @@
-import Io from './io';
-
-module.exports = Io;
+module.exports = require('./io').default;
