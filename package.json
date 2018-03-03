@@ -2,8 +2,11 @@
   "name": "@hrasoa/io",
   "version": "0.0.0",
   "description": "",
-  "main": "src/index.js",
+  "main": "dist/io.js",
+  "module": "src/io.js",
   "scripts": {
+    "build": "NODE_ENV=production webpack",
+    "start": "webpack-dev-server --open",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -15,5 +18,14 @@
   "bugs": {
     "url": "https://github.com/hrasoa/io/issues"
   },
-  "homepage": "https://github.com/hrasoa/io#readme"
+  "homepage": "https://github.com/hrasoa/io#readme",
+  "devDependencies": {
+    "@babel/core": "^7.0.0-beta.40",
+    "@babel/preset-env": "^7.0.0-beta.40",
+    "babel-loader": "8.0.0-beta.0",
+    "html-webpack-plugin": "^3.0.4",
+    "webpack": "^4.0.1",
+    "webpack-cli": "^2.0.10",
+    "webpack-dev-server": "^3.1.0"
+  }
 }
