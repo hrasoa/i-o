@@ -47,6 +47,10 @@ class Io {
     this.api.unobserve(target);
   }
 
+  disconnect() {
+    this.api.disconnect();
+  }
+
   observe(target, options = {}) {
     const id = getEntryId();
     this.entries[id] = { options };
