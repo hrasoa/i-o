@@ -1,6 +1,6 @@
 {
   "name": "@hrasoa/io",
-  "version": "0.0.0-6",
+  "version": "0.0.0-7",
   "description": "",
   "main": "src/io.js",
   "files": [

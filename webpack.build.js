@@ -32,11 +32,8 @@ module.exports = {
   ],
   output: {
     filename: 'io.js',
-    library: {
-      root: 'Io',
-      commonjs: 'Io',
-    },
-    libraryTarget: 'umd',
+    library: 'Io',
+    libraryTarget: 'var',
     path: path.resolve(__dirname, 'dist'),
   },
 };
