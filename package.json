@@ -1,5 +1,5 @@
 {
-  "name": "@hrasoa.io",
+  "name": "io",
   "version": "0.0.0",
   "description": "",
   "main": "src/index.js",
@@ -8,12 +8,12 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/hrasoa/i-o.git"
+    "url": "git+https://github.com/hrasoa/io.git"
   },
   "author": "Haja Rasoahaingo",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/hrasoa/i-o/issues"
+    "url": "https://github.com/hrasoa/io/issues"
   },
-  "homepage": "https://github.com/hrasoa/i-o#readme"
+  "homepage": "https://github.com/hrasoa/io#readme"
 }
