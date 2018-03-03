@@ -45,7 +45,7 @@ class Io {
   onIntersection(id, entry, options) {
     options.onIntersection(entry);
     if (options.once === true) {
-      this.unobserve(entry.target, id);
+      this.unobserve(entry.target);
     }
   }
 
