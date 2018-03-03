@@ -3,7 +3,6 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 
 module.exports = {
   mode: 'production',
-  entry: './src/lib.js',
   module: {
     rules: [
       {
@@ -26,6 +25,7 @@ module.exports = {
   },
   plugins: [
     new HtmlWebpackPlugin({
+      inject: false,
       title: 'Io',
       template: 'public/index.html',
     }),

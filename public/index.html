@@ -26,5 +26,18 @@
         <img data-src="https://picsum.photos/400/250?image=2" />
       </li>
     </ul>
+    <% for (var chunk in htmlWebpackPlugin.files.chunks) { %>
+      <script src="/<%= htmlWebpackPlugin.files.chunks[chunk].entry %>"></script>
+    <% } %>
+    <script>
+      const images = document.querySelectorAll('img');
+      const lazyImages = new Io({
+        onIntersection: function(entry) {
+          entry.target.setAttribute('src', entry.target.getAttribute('data-src'));
+        },
+      });
+      lazyImages.observe(images[0]);
+      lazyImages.observe(images[1]);
+    </script>
   </body>
 </html>
