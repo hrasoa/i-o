@@ -51,6 +51,7 @@ class Io {
 
   unobserve(target) {
     if (!this.api) return;
+    delete this.entries[target.getAttribute(DATA_ATTRIBUTE_ID)];
     this.api.unobserve(target);
   }
 
