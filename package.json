@@ -5,7 +5,6 @@
   "main": "src/io.js",
   "files": [
     "dist",
-    "public",
     "src"
   ],
   "scripts": {
