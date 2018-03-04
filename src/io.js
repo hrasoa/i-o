@@ -2,8 +2,8 @@ import Observer from './observer';
 
 const DEFAULT_OPTIONS = {
   observer: {},
-  once: true,
-  onIntersection: null,
+  onIntersectionOut: null,
+  onIntersectionIn: null,
   delay: 800,
   intersectionTime: 250,
 };
@@ -30,9 +30,13 @@ class Io {
     this.entries[id][isIntersecting ? 'lastIn' : 'lastOut'] = time;
     const { lastIn = 0, lastOut = 0 } = this.entries[id];
 
+    if (!isIntersecting && options.onIntersectionOut) {
+      options.onIntersectionOut(entry, this.unobserve.bind(this, entry.target));
+    }
+
     if (isIntersecting) {
       this.entries[id].timerId = setTimeout(
-        this.onIntersection.bind(this, entry, options),
+        this.onIntersectionIn.bind(this, entry, options),
         options.delay,
       );
     }
@@ -42,18 +46,15 @@ class Io {
     }
   }
 
-  onIntersection(entry, options) {
-    if (options.onIntersection) {
-      options.onIntersection(entry);
-    }
-    if (options.once === true) {
-      this.unobserve(entry.target);
-    }
+  onIntersectionIn(entry, options) {
+    if (!options.onIntersectionIn) return;
+    options.onIntersectionIn(entry, this.unobserve.bind(this, entry.target));
   }
 
   unobserve(target) {
-    if (!this.api) return;
-    delete this.entries[target.getAttribute(DATA_ATTRIBUTE_ID)];
+    const id = target.getAttribute(DATA_ATTRIBUTE_ID);
+    if (!this.api || !this.entries[id]) return;
+    delete this.entries[id];
     this.api.unobserve(target);
   }
 
