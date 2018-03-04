@@ -3,7 +3,7 @@ import Observer from './observer';
 const DEFAULT_OPTIONS = {
   observer: {},
   once: true,
-  onIntersection: console.log,
+  onIntersection: null,
   delay: 800,
   intersectionTime: 250,
 };
@@ -43,7 +43,9 @@ class Io {
   }
 
   onIntersection(entry, options) {
-    options.onIntersection(entry);
+    if (options.onIntersection) {
+      options.onIntersection(entry);
+    }
     if (options.once === true) {
       this.unobserve(entry.target);
     }

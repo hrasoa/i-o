@@ -1,6 +1,6 @@
 {
   "name": "@hrasoa/io",
-  "version": "0.0.0-11",
+  "version": "0.0.0-15",
   "description": "IntersectionObserver generic library",
   "main": "src/io.js",
   "files": [
@@ -10,9 +10,9 @@
   ],
   "scripts": {
     "build": "NODE_ENV=production webpack --config webpack/build.js",
-    "lint": "eslint src/**",
+    "lint": "eslint src/** __tests__/**",
     "start": "webpack-dev-server --config webpack/dev.js --open",
-    "test": "jest -c ./config/jest.js",
+    "test": "jest -c __tests__/config/jest.js",
     "postpublish": "gh-pages -d dist"
   },
   "repository": {
@@ -24,7 +24,7 @@
   "bugs": {
     "url": "https://github.com/hrasoa/io/issues"
   },
-  "homepage": "https://github.com/hrasoa/io#readme",
+  "homepage": "https://hrasoa.github.io/io/",
   "devDependencies": {
     "@babel/core": "^7.0.0-beta.40",
     "@babel/preset-env": "^7.0.0-beta.40",

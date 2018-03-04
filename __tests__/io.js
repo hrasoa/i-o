@@ -43,12 +43,14 @@ describe('test the constructor', () => {
     expect(io.options).toEqual({
       observer: {},
       once: true,
-      onIntersection: console.log,
+      onIntersection: null,
       delay: 800,
       intersectionTime: 250,
     });
     expect(io.entries).toEqual({});
     expect(io.api.disconnect).toBeDefined();
+    expect(io.api.observe).toBeDefined();
+    expect(io.api.unobserve).toBeDefined();
   });
 
   test('should create a new instance of Io with custom options', () => {
@@ -57,12 +59,12 @@ describe('test the constructor', () => {
       observer: { root: '#root' },
     });
     expect(IntersectionObserver).toHaveBeenCalledTimes(1);
-    expect(IntersectionObserver.mock.calls[0][0]).toEqual(expect.any(Function));
+    expect(IntersectionObserver.mock.calls[0][0].name).toEqual('bound handleIntersection');
     expect(IntersectionObserver.mock.calls[0][1]).toEqual({ root: '#root' });
     expect(io.options).toEqual({
       observer: { root: '#root' },
       once: false,
-      onIntersection: console.log,
+      onIntersection: null,
       delay: 800,
       intersectionTime: 250,
     });
@@ -75,6 +77,16 @@ describe('test the mehtods', () => {
     io = new Io();
   });
 
+  test('should not error when api is not defined', () => {
+    io.api = null;
+    io.disconnect();
+    io.observe();
+    io.unobserve();
+    expect(mockDisconnect).not.toHaveBeenCalled();
+    expect(mockObserve).not.toHaveBeenCalled();
+    expect(mockUnobserve).not.toHaveBeenCalled();
+  });
+
   test('disconnect should have been called once', () => {
     io.disconnect();
     expect(mockDisconnect).toHaveBeenCalledTimes(1);
@@ -84,7 +96,7 @@ describe('test the mehtods', () => {
     const target = document.createElement('div');
     io.observe(target);
     const id = target.getAttribute('data-io-id');
-    expect(id).not.toBeNull();
+    expect(id).toMatch(/^io-[\w]{9}$/);
     expect(io.entries[id]).toEqual({ options: {} });
     expect(mockObserve).toHaveBeenCalledWith(target);
   });
@@ -102,16 +114,16 @@ describe('test the mehtods', () => {
   test('should call the interaction callback and unobserve', () => {
     const target = document.createElement('div');
     io.observe(target);
-    io.onIntersection({ time: '1111', target }, { once: true, onIntersection: mockOnIntersection });
-    expect(mockOnIntersection).toHaveBeenCalledWith({ time: '1111', target });
+    io.onIntersection({ time: 0, target }, { once: true, onIntersection: mockOnIntersection });
+    expect(mockOnIntersection).toHaveBeenCalledWith({ time: 0, target });
     expect(mockUnobserve).toHaveBeenCalledWith(target);
   });
 
   test('should call the interaction callback and not unobserve', () => {
     const target = document.createElement('div');
     io.observe(target);
-    io.onIntersection({ time: '1111', target }, { once: false, onIntersection: mockOnIntersection });
-    expect(mockOnIntersection).toHaveBeenCalledWith({ time: '1111', target });
+    io.onIntersection({ time: 0, target }, { once: false, onIntersection: mockOnIntersection });
+    expect(mockOnIntersection).toHaveBeenCalledWith({ time: 0, target });
     expect(mockUnobserve).not.toHaveBeenCalled();
   });
 
@@ -125,7 +137,7 @@ describe('test the mehtods', () => {
   });
 });
 
-describe('test the intersection behabiors', () => {
+describe('test the intersection behaviors', () => {
   let spyOnIntersection;
   let io;
   let target;
@@ -149,21 +161,20 @@ describe('test the intersection behabiors', () => {
 
   it('should not call the callback as the user scrolls quickly', () => {
     const targetId = target.getAttribute('data-io-id');
-    io.handleEntryIntersection({ target, time: 0, isIntersecting: false });
     // the target srolls in at t1 = 100
     io.handleEntryIntersection({ target, time: 100, isIntersecting: true });
     jest.advanceTimersByTime(100);
     expect(io.entries[targetId].timerId).toBeDefined();
-    expect(setTimeout).toHaveBeenCalled();
+    expect(setTimeout).toHaveBeenCalledWith(expect.any(Function), 800);
     expect(spyOnIntersection).not.toHaveBeenCalled();
 
     // the target scolls out at t2 = 200
     io.handleEntryIntersection({ target, time: 200, isIntersecting: false });
     jest.advanceTimersByTime(100);
 
-    // We are under the intersectionTime (delta t2 - t1 < 250) or the delay (1000ms),
+    // We are under the intersectionTime (delta t2 - t1 < 250) or the delay (800ms),
     // so the callback cannot be called.
-    // Advence the timer after the 1000ms to see of the callback is called
+    // Advence the timer after the 800ms to see of the callback is called
     // But it shouldn't as clearTimeout was called
     expect(clearTimeout).toHaveBeenCalled();
     jest.advanceTimersByTime(2000);
@@ -190,7 +201,7 @@ describe('test the intersection behabiors', () => {
     }, {
       observer: {},
       once: true,
-      onIntersection: console.log,
+      onIntersection: null,
       delay: 800,
       intersectionTime: 250,
     });
@@ -218,7 +229,7 @@ describe('test the intersection behabiors', () => {
     }, {
       observer: {},
       once: false,
-      onIntersection: console.log,
+      onIntersection: null,
       delay: 300,
       intersectionTime: 250,
     });
