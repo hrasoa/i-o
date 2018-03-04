@@ -1,3 +1,5 @@
+import Observer from './observer';
+
 const DEFAULT_OPTIONS = {
   observer: {},
   once: true,
@@ -12,9 +14,7 @@ class Io {
   constructor(options) {
     this.options = { ...DEFAULT_OPTIONS, ...options };
     this.entries = {};
-    this.api = typeof window !== 'undefined' && window.IntersectionObserver ?
-      new IntersectionObserver(this.handleIntersection.bind(this), this.options.observer) :
-      null;
+    this.api = new Observer(this.handleIntersection.bind(this), this.options.observer);
   }
 
   handleIntersection(entries) {
@@ -32,7 +32,7 @@ class Io {
 
     if (isIntersecting) {
       this.entries[id].timerId = setTimeout(
-        this.onIntersection.bind(this, id, entry, options),
+        this.onIntersection.bind(this, entry, options),
         options.delay,
       );
     }
@@ -42,7 +42,7 @@ class Io {
     }
   }
 
-  onIntersection(id, entry, options) {
+  onIntersection(entry, options) {
     options.onIntersection(entry);
     if (options.once === true) {
       this.unobserve(entry.target);
