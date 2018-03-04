@@ -32,15 +32,16 @@ class Io {
     } = { ...this.options, ...this.entries[id].options };
     this.entries[id][isIntersecting ? 'lastIn' : 'lastOut'] = time;
     const { lastIn = 0, lastOut = 0 } = this.entries[id];
+    const unobserve = this.unobserve.bind(this, target);
 
     if (isIntersecting && onIntersectionIn) {
       this.entries[id].timerId = setTimeout(() => {
-        onIntersectionIn(entry, this.unobserve.bind(this, target));
+        onIntersectionIn(entry, unobserve);
       }, delay);
     }
 
     if (!isIntersecting) {
-      if (onIntersectionOut) onIntersectionOut(entry, this.unobserve.bind(this, target));
+      if (onIntersectionOut) onIntersectionOut(entry, unobserve);
       if (lastIn - lastOut < intersectionTime) clearTimeout(this.entries[id].timerId);
     }
   }
