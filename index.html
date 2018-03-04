@@ -43,16 +43,17 @@
       transform-origin: right;
       white-space: nowrap;      
     }
-    img {
+    .lazy {
       display: block;
       max-width: 100%;
       min-height: 250px;
       object-fit: cover;
       opacity: 0;
-      transition: opacity .6s;
+      transition: opacity .6s, transform .3s;
     }
-    img[src] {
+    .lazy[src] {
       opacity: 1;
+      transform: translate3d(0, -10px, 0);
     }
     .hero {
       display: grid;
@@ -64,13 +65,26 @@
       grid-column-start: 2;
       grid-row-start: 2;
     }
+    .github-logo {
+      position: fixed;
+      top: 10px;
+      right: 20px;
+      display: block
+    }
+    .github-logo img {
+      display: block;
+      max-width: 100%;
+    }
     </style>
   </head>
   <body>
     <div class="hero">
+      <a class="github-logo" title="@hrasoa/io" target="_blank" href="https://github.com/hrasoa/io">
+        <img width="36" height="36" src="https://assets-cdn.github.com/images/modules/logos_page/GitHub-Mark.png" alt="">
+      </a>
       <div class="hero_content">
         <h1>@hrasoa/io, <span>a ~2.9kb intersection observer library</span></h1>
-        <p>This page emonstrates how <a title="@hrasoa/io" target="_blank" href="https://github.com/hrasoa/io">@hrasoa/io</a> works. 
+        <p>This page demonstrates how <a title="@hrasoa/io" target="_blank" href="https://github.com/hrasoa/io">@hrasoa/io</a> works. 
           For this demo, we use the same instance for two features: lazy images and infinite scrolling.</p>
         <p>If you scroll fast, some images won't load. They will appear only if the element 
           stays a little moment on the screen.</p>
@@ -89,7 +103,8 @@
       
       var io = new Io({
         // Global callback for all the observers (lazy images)
-        onIntersection: function(entry) {
+        onIntersectionIn: function(entry, unobserve) {
+          entry.target.onload = unobserve;
           entry.target.src = entry.target.getAttribute('data-src');
         },
       });
@@ -97,25 +112,33 @@
       io.observe(sentinel, {
         // Excute the callback immediatly
         delay: 0,
-        // Execute forever
-        once: false,
         // Sepecific callback for this observer (infinite scroll)
-        onIntersection: function() { addImages(10); }
+        onIntersectionIn: function() { addImages(10); }
       });
 
       function addImages(amount) {
         images = document.querySelectorAll('img');
         var frag = document.createDocumentFragment();
+        var metaFrag = document.createDocumentFragment();
         for (var i = 0; i < amount; i++) {
+          var url = 'https://picsum.photos/400/250?image=' + i + images.length;
+          var link = document.createElement('link');
+          // Prefetch the image we are lazy loading
+          link.setAttribute('rel', 'prefetch');
+          link.setAttribute('as', 'image');
+          link.href = url;
           var li = document.createElement('li');
-          var img = document.createElement('img');
-          img.setAttribute('data-src', 'https://picsum.photos/400/250?image=' + i + images.length);
+          var img = document.createElement('img');          
+          img.setAttribute('data-src', url);
+          img.className = 'lazy';
           li.appendChild(img);
           // Watch for the new image
           io.observe(img);
           frag.appendChild(li);
+          metaFrag.appendChild(link);
         }
         list.appendChild(frag);
+        document.head.appendChild(metaFrag);
       }
     </script>
   </body>
