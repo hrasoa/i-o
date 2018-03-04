@@ -104,8 +104,8 @@
       var io = new Io({
         // Global callback for all the observers (lazy images)
         onIntersectionIn: function(entry, unobserve) {
-          entry.target.onload = unobserve;
           entry.target.src = entry.target.getAttribute('data-src');
+          unobserve();
         },
       });
 

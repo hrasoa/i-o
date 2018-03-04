@@ -47,18 +47,18 @@ class Io {
 
   unobserve(target) {
     const id = target.getAttribute(DATA_ATTRIBUTE_ID);
-    if (!this.api || !this.entries[id]) return;
+    if (this.api.unobserve) return;
     delete this.entries[id];
     this.api.unobserve(target);
   }
 
   disconnect() {
-    if (!this.api) return;
+    if (!this.api.disconnect) return;
     this.api.disconnect();
   }
 
   observe(target, options = {}) {
-    if (!this.api) return;
+    if (!this.api.observe) return;
     const id = getEntryId();
     this.entries[id] = { options };
     target.setAttribute(DATA_ATTRIBUTE_ID, id);
