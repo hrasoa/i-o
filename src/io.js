@@ -8,7 +8,7 @@ const DEFAULT_OPTIONS = {
   intersectionTime: 250,
 };
 
-const DATA_ATTRIBUTE_ID = 'data-io-id';
+const ATTR_ID = 'data-io-id';
 
 class Io {
   constructor(options) {
@@ -18,35 +18,36 @@ class Io {
   }
 
   handleIntersection(entries) {
-    for (let i = entries.length - 1; i >= 0; i -= 1) {
-      this.handleEntryIntersection(entries[i]);
-    }
+    for (let i = entries.length - 1; i >= 0; i -= 1) this.handleEntryIntersection(entries[i]);
   }
 
   handleEntryIntersection(entry) {
     const { target, isIntersecting, time } = entry;
-    const id = target.getAttribute(DATA_ATTRIBUTE_ID);
-    const options = { ...this.options, ...this.entries[id].options };
+    const id = target.getAttribute(ATTR_ID);
+    const { onIntersectionOut, onIntersectionIn, delay } = {
+      ...this.options,
+      ...this.entries[id].options,
+    };
     this.entries[id][isIntersecting ? 'lastIn' : 'lastOut'] = time;
     const { lastIn = 0, lastOut = 0 } = this.entries[id];
 
-    if (!isIntersecting && options.onIntersectionOut) {
-      options.onIntersectionOut(entry, this.unobserve.bind(this, entry.target));
+    if (!isIntersecting && onIntersectionOut) {
+      onIntersectionOut(entry, this.unobserve.bind(this, target));
     }
 
-    if (isIntersecting && options.onIntersectionIn) {
+    if (isIntersecting && onIntersectionIn) {
       this.entries[id].timerId = setTimeout(() => {
-        options.onIntersectionIn(entry, this.unobserve.bind(this, entry.target));
-      }, options.delay);
+        onIntersectionIn(entry, this.unobserve.bind(this, target));
+      }, delay);
     }
 
-    if (!isIntersecting && lastIn - lastOut < options.intersectionTime) {
+    if (!isIntersecting && lastIn - lastOut < onIntersectionIn) {
       clearTimeout(this.entries[id].timerId);
     }
   }
 
   unobserve(target) {
-    const id = target.getAttribute(DATA_ATTRIBUTE_ID);
+    const id = target.getAttribute(ATTR_ID);
     if (!this.api.unobserve) return;
     delete this.entries[id];
     this.api.unobserve(target);
@@ -61,7 +62,7 @@ class Io {
     if (!this.api.observe) return;
     const id = getEntryId();
     this.entries[id] = { options };
-    target.setAttribute(DATA_ATTRIBUTE_ID, id);
+    target.setAttribute(ATTR_ID, id);
     this.api.observe(target);
   }
 }
