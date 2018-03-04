@@ -47,7 +47,7 @@ class Io {
 
   unobserve(target) {
     const id = target.getAttribute(DATA_ATTRIBUTE_ID);
-    if (this.api.unobserve) return;
+    if (!this.api.unobserve) return;
     delete this.entries[id];
     this.api.unobserve(target);
   }
