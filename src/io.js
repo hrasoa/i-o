@@ -34,21 +34,15 @@ class Io {
       options.onIntersectionOut(entry, this.unobserve.bind(this, entry.target));
     }
 
-    if (isIntersecting) {
-      this.entries[id].timerId = setTimeout(
-        this.onIntersectionIn.bind(this, entry, options),
-        options.delay,
-      );
+    if (isIntersecting && options.onIntersectionIn) {
+      this.entries[id].timerId = setTimeout(() => {
+        options.onIntersectionIn(entry, this.unobserve.bind(this, entry.target));
+      }, options.delay);
     }
 
     if (!isIntersecting && lastIn - lastOut < options.intersectionTime) {
       clearTimeout(this.entries[id].timerId);
     }
-  }
-
-  onIntersectionIn(entry, options) {
-    if (!options.onIntersectionIn) return;
-    options.onIntersectionIn(entry, this.unobserve.bind(this, entry.target));
   }
 
   unobserve(target) {
