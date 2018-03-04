@@ -24,10 +24,12 @@ class Io {
   handleEntryIntersection(entry) {
     const { target, isIntersecting, time } = entry;
     const id = target.getAttribute(ATTR_ID);
-    const { onIntersectionOut, onIntersectionIn, delay } = {
-      ...this.options,
-      ...this.entries[id].options,
-    };
+    const {
+      onIntersectionOut,
+      onIntersectionIn,
+      delay,
+      intersectionTime,
+    } = { ...this.options, ...this.entries[id].options };
     this.entries[id][isIntersecting ? 'lastIn' : 'lastOut'] = time;
     const { lastIn = 0, lastOut = 0 } = this.entries[id];
 
@@ -39,7 +41,7 @@ class Io {
 
     if (!isIntersecting) {
       if (onIntersectionOut) onIntersectionOut(entry, this.unobserve.bind(this, target));
-      if (lastIn - lastOut < onIntersectionIn) clearTimeout(this.entries[id].timerId);
+      if (lastIn - lastOut < intersectionTime) clearTimeout(this.entries[id].timerId);
     }
   }
 
