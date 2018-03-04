@@ -43,7 +43,7 @@
       transform-origin: right;
       white-space: nowrap;      
     }
-    img {
+    .lazy {
       display: block;
       max-width: 100%;
       min-height: 250px;
@@ -51,7 +51,7 @@
       opacity: 0;
       transition: opacity .6s, transform .3s;
     }
-    img[src] {
+    .lazy[src] {
       opacity: 1;
       transform: translate3d(0, -10px, 0);
     }
@@ -65,10 +65,23 @@
       grid-column-start: 2;
       grid-row-start: 2;
     }
+    .github-logo {
+      position: fixed;
+      top: 10px;
+      right: 20px;
+      display: block
+    }
+    .github-logo img {
+      display: block;
+      max-width: 100%;
+    }
     </style>
   </head>
   <body>
     <div class="hero">
+      <a class="github-logo" title="@hrasoa/io" target="_blank" href="https://github.com/hrasoa/io">
+        <img width="36" height="36" src="https://assets-cdn.github.com/images/modules/logos_page/GitHub-Mark.png" alt="">
+      </a>
       <div class="hero_content">
         <h1>@hrasoa/io, <span>a ~2.9kb intersection observer library</span></h1>
         <p>This page demonstrates how <a title="@hrasoa/io" target="_blank" href="https://github.com/hrasoa/io">@hrasoa/io</a> works. 
@@ -117,6 +130,7 @@
           var li = document.createElement('li');
           var img = document.createElement('img');          
           img.setAttribute('data-src', url);
+          img.className = 'lazy';
           li.appendChild(img);
           // Watch for the new image
           io.observe(img);
