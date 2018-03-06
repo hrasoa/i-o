@@ -5,7 +5,7 @@ const DEFAULT_OPTIONS = {
   onIntersectionOut: null,
   onIntersectionIn: null,
   delay: 800,
-  intersectionTime: 250,
+  cancelDelay: 250,
 };
 
 const ATTR_ID = 'data-io-id';
@@ -28,7 +28,7 @@ class Io {
       onIntersectionOut,
       onIntersectionIn,
       delay,
-      intersectionTime,
+      cancelDelay,
     } = { ...this.options, ...this.entries[id].options };
     this.entries[id][isIntersecting ? 'lastIn' : 'lastOut'] = time;
     const { lastIn = 0, lastOut = 0 } = this.entries[id];
@@ -45,7 +45,7 @@ class Io {
 
     if (!isIntersecting) {
       if (onIntersectionOut) onIntersectionOut(entry, unobserve);
-      if (lastIn - lastOut < intersectionTime) cancelAnimationFrame(this.entries[id].timerId);
+      if (lastIn - lastOut < cancelDelay) cancelAnimationFrame(this.entries[id].timerId);
     }
   }
 
