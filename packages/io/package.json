@@ -7,6 +7,7 @@
     "dist",
     "src"
   ],
+  "repository": "hrasoa/io",
   "scripts": {
     "build": "NODE_ENV=production webpack --config webpack/build.js",
     "lint": "eslint src/** __tests__/**",
@@ -14,15 +15,8 @@
     "test": "jest -c __tests__/config/jest.js",
     "postpublish": "gh-pages -d dist"
   },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/hrasoa/io.git"
-  },
   "author": "Haja Rasoahaingo",
   "license": "MIT",
-  "bugs": {
-    "url": "https://github.com/hrasoa/io/issues"
-  },
   "homepage": "https://hrasoa.github.io/io/",
   "devDependencies": {
     "@babel/core": "^7.0.0-beta.40",
