@@ -12,8 +12,7 @@
     "build": "NODE_ENV=production webpack --config webpack/build.js",
     "lint": "eslint src/** __tests__/**",
     "start": "webpack-dev-server --config webpack/dev.js --open",
-    "test": "jest -c __tests__/config/jest.js",
-    "postpublish": "gh-pages -d dist"
+    "test": "jest -c __tests__/config/jest.js"
   },
   "author": "Haja Rasoahaingo",
   "license": "MIT",
