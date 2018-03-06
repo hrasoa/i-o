@@ -96,50 +96,54 @@
       <script src="<%= htmlWebpackPlugin.files.chunks[chunk].entry %>"></script>
     <% } %>
     <script>
-      // Our infinite scroll placeholder
-      var sentinel = document.querySelector('.sentinel'); 
-      var list = document.querySelector('ul');
-      let j = 0;
+      (function() {
+        'use strict';    
+        // Our infinite scroll placeholder
+        var sentinel = document.querySelector('.sentinel'); 
+        var list = document.querySelector('ul');
+        let j = 0;
 
-      var io = new Io({
-        // Global callback for all the observers (lazy images)
-        onIntersectionIn: function(entry, unobserve) {
-          entry.target.src = entry.target.getAttribute('data-src');
-          unobserve();
-        },
-      });
+        var io = new Io({
+          // Global callback for all the observers (lazy images)
+          onIntersectionIn: function(entry, unobserve) {
+            entry.target.src = entry.target.getAttribute('data-src');
+            unobserve();
+          },
+        });
 
-      io.observe(sentinel, {
-        // Excute the callback immediatly
-        delay: 0,
-        // Sepecific callback for this observer (infinite scroll)
-        onIntersectionIn: function() { addImages(10); }
-      });
+        io.observe(sentinel, {
+          // Excute the callback immediatly
+          delay: 0,
+          // Sepecific callback for this observer (infinite scroll)
+          onIntersectionIn: function() { addImages(10); }
+        });
 
-      function addImages(amount) {
-        var frag = document.createDocumentFragment();
-        var metaFrag = document.createDocumentFragment();
-        for (var i = 0; i < amount; i++) {
-          var url = 'http://via.placeholder.com/400x250?text=' + j;
-          var link = document.createElement('link');
-          // Prefetch the image we are lazy loading
-          link.setAttribute('rel', 'prefetch');
-          link.setAttribute('as', 'image');
-          link.href = url;
-          var li = document.createElement('li');
-          var img = document.createElement('img');          
-          img.setAttribute('data-src', url);
-          img.className = 'lazy';
-          li.appendChild(img);
-          // Watch for the new image
-          io.observe(img);
-          frag.appendChild(li);
-          metaFrag.appendChild(link);
-          j += 1;
+        function addImages(amount) {
+          var frag = document.createDocumentFragment();
+          var metaFrag = document.createDocumentFragment();
+          var url, link, li, img;
+          for (var i = 0; i < amount; i++) {
+            url = 'https://picsum.photos/400/250?image=' + j;
+            link = document.createElement('link');
+            // Prefetch the image we are lazy loading
+            link.setAttribute('rel', 'prefetch');
+            link.setAttribute('as', 'image');
+            link.href = url;
+            li = document.createElement('li');
+            img = document.createElement('img');          
+            img.setAttribute('data-src', url);
+            img.className = 'lazy';
+            li.appendChild(img);
+            // Watch for the new image
+            io.observe(img);
+            frag.appendChild(li);
+            metaFrag.appendChild(link);
+            j += 1;
+          }
+          list.appendChild(frag);
+          document.head.appendChild(metaFrag);
         }
-        list.appendChild(frag);
-        document.head.appendChild(metaFrag);
-      }
+      })();
     </script>
   </body>
 </html>
