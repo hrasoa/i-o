@@ -35,14 +35,17 @@ class Io {
     const unobserve = this.unobserve.bind(this, target);
 
     if (isIntersecting && onIntersectionIn) {
-      this.entries[id].timerId = setTimeout(() => {
-        onIntersectionIn(entry, unobserve);
-      }, delay);
+      const step = (timestamp) => {
+        if (timestamp - lastIn < delay) {
+          this.entries[id].timerId = requestAnimationFrame(step);
+        } else onIntersectionIn(entry, unobserve);
+      };
+      this.entries[id].timerId = requestAnimationFrame(step);
     }
 
     if (!isIntersecting) {
       if (onIntersectionOut) onIntersectionOut(entry, unobserve);
-      if (lastIn - lastOut < intersectionTime) clearTimeout(this.entries[id].timerId);
+      if (lastIn - lastOut < intersectionTime) cancelAnimationFrame(this.entries[id].timerId);
     }
   }
 

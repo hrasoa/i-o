@@ -99,8 +99,8 @@
       // Our infinite scroll placeholder
       var sentinel = document.querySelector('.sentinel'); 
       var list = document.querySelector('ul');
-      var images = document.querySelectorAll('img');
-      
+      let j = 0;
+
       var io = new Io({
         // Global callback for all the observers (lazy images)
         onIntersectionIn: function(entry, unobserve) {
@@ -117,11 +117,10 @@
       });
 
       function addImages(amount) {
-        images = document.querySelectorAll('img');
         var frag = document.createDocumentFragment();
         var metaFrag = document.createDocumentFragment();
         for (var i = 0; i < amount; i++) {
-          var url = 'https://picsum.photos/400/250?image=' + i + images.length;
+          var url = 'http://via.placeholder.com/400x250?text=' + j;
           var link = document.createElement('link');
           // Prefetch the image we are lazy loading
           link.setAttribute('rel', 'prefetch');
@@ -136,6 +135,7 @@
           io.observe(img);
           frag.appendChild(li);
           metaFrag.appendChild(link);
+          j += 1;
         }
         list.appendChild(frag);
         document.head.appendChild(metaFrag);
