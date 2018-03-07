@@ -1,5 +1,5 @@
 const path = require('path');
-const HtmlWebpackPlugin = require('html-webpack-plugin');
+const CleanWebpackPlugin = require('clean-webpack-plugin');
 
 module.exports = {
   mode: 'production',
@@ -24,11 +24,7 @@ module.exports = {
     ],
   },
   plugins: [
-    new HtmlWebpackPlugin({
-      inject: false,
-      title: 'Io',
-      template: 'public/index.html',
-    }),
+    new CleanWebpackPlugin(['dist']),
   ],
   output: {
     filename: 'io.js',

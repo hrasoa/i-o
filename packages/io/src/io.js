@@ -3,7 +3,7 @@ import Observer from './observer';
 const DEFAULT_OPTIONS = {
   observer: {},
   onIntersectionOut: null,
-  onIntersectionIn: null,
+  onIntersection: null,
   delay: 800,
   cancelDelay: 250,
 };
@@ -26,19 +26,18 @@ class Io {
     const id = target.getAttribute(ATTR_ID);
     const {
       onIntersectionOut,
-      onIntersectionIn,
+      onIntersection,
       delay,
       cancelDelay,
     } = { ...this.options, ...this.entries[id].options };
     this.entries[id][isIntersecting ? 'lastIn' : 'lastOut'] = time;
     const { lastIn = 0, lastOut = 0 } = this.entries[id];
-    const unobserve = this.unobserve.bind(this, target);
+    const unobserve = this.unobserve.bind(this, target, id);
 
-    if (isIntersecting && onIntersectionIn) {
+    if (isIntersecting && onIntersection) {
       const step = (timestamp) => {
-        if (timestamp - lastIn < delay) {
-          this.entries[id].timerId = requestAnimationFrame(step);
-        } else onIntersectionIn(entry, unobserve);
+        if (timestamp - lastIn < delay) this.entries[id].timerId = requestAnimationFrame(step);
+        else onIntersection(entry, unobserve);
       };
       this.entries[id].timerId = requestAnimationFrame(step);
     }
@@ -49,20 +48,19 @@ class Io {
     }
   }
 
-  unobserve(target) {
-    const id = target.getAttribute(ATTR_ID);
-    if (!this.api.unobserve) return;
+  unobserve(target, id) {
+    if (!this.api) return;
     delete this.entries[id];
     this.api.unobserve(target);
   }
 
   disconnect() {
-    if (!this.api.disconnect) return;
+    if (!this.api) return;
     this.api.disconnect();
   }
 
   observe(target, options = {}) {
-    if (!this.api.observe) return;
+    if (!this.api) return;
     const id = getEntryId();
     this.entries[id] = { options };
     target.setAttribute(ATTR_ID, id);

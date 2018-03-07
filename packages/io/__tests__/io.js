@@ -5,6 +5,7 @@ const mockDisconnect = jest.fn();
 const mockObserve = jest.fn();
 const mockUnobserve = jest.fn();
 const mockOnIntersection = jest.fn();
+const mockOnIntersectionOut = jest.fn();
 
 jest.useFakeTimers();
 
@@ -21,6 +22,7 @@ beforeEach(() => {
   mockObserve.mockClear();
   mockUnobserve.mockClear();
   mockOnIntersection.mockClear();
+  mockOnIntersectionOut.mockClear();
 });
 
 describe('test utilities', () => {
@@ -42,10 +44,10 @@ describe('test the constructor', () => {
     expect(IntersectionObserver.mock.calls[0][1]).toEqual({});
     expect(io.options).toEqual({
       observer: {},
-      once: true,
+      onIntersectionOut: null,
       onIntersection: null,
       delay: 800,
-      intersectionTime: 250,
+      cancelDelay: 250,
     });
     expect(io.entries).toEqual({});
     expect(io.api.disconnect).toBeDefined();
@@ -55,7 +57,6 @@ describe('test the constructor', () => {
 
   test('should create a new instance of Io with custom options', () => {
     const io = new Io({
-      once: false,
       observer: { root: '#root' },
     });
     expect(IntersectionObserver).toHaveBeenCalledTimes(1);
@@ -63,10 +64,10 @@ describe('test the constructor', () => {
     expect(IntersectionObserver.mock.calls[0][1]).toEqual({ root: '#root' });
     expect(io.options).toEqual({
       observer: { root: '#root' },
-      once: false,
+      onIntersectionOut: null,
       onIntersection: null,
       delay: 800,
-      intersectionTime: 250,
+      cancelDelay: 250,
     });
   });
 });
@@ -106,25 +107,9 @@ describe('test the mehtods', () => {
     io.observe(target);
     const id = target.getAttribute('data-io-id');
     expect(io.entries[id]).toBeDefined();
-    io.unobserve(target);
+    io.unobserve(target, id);
     expect(io.entries[id]).toBeUndefined();
     expect(mockUnobserve).toHaveBeenCalledWith(target);
-  });
-
-  test('should call the interaction callback and unobserve', () => {
-    const target = document.createElement('div');
-    io.observe(target);
-    io.onIntersection({ time: 0, target }, { once: true, onIntersection: mockOnIntersection });
-    expect(mockOnIntersection).toHaveBeenCalledWith({ time: 0, target });
-    expect(mockUnobserve).toHaveBeenCalledWith(target);
-  });
-
-  test('should call the interaction callback and not unobserve', () => {
-    const target = document.createElement('div');
-    io.observe(target);
-    io.onIntersection({ time: 0, target }, { once: false, onIntersection: mockOnIntersection });
-    expect(mockOnIntersection).toHaveBeenCalledWith({ time: 0, target });
-    expect(mockUnobserve).not.toHaveBeenCalled();
   });
 
   test('should call handleEntryIntersection for each entries', () => {
@@ -138,100 +123,79 @@ describe('test the mehtods', () => {
 });
 
 describe('test the intersection behaviors', () => {
-  let spyOnIntersection;
+  const spyOnIntersection = jest.fn();
+  const spyRaf = jest.spyOn(global, 'requestAnimationFrame');
+  const spyCancelAf = jest.spyOn(global, 'cancelAnimationFrame');
   let io;
   let target;
 
   beforeEach(() => {
-    io = new Io();
-    if (spyOnIntersection) spyOnIntersection.mockClear();
-    spyOnIntersection = jest.spyOn(io, 'onIntersection');
+    io = new Io({
+      onIntersectionOut: mockOnIntersectionOut,
+    });
+    spyOnIntersection.mockClear();
+    spyRaf.mockClear();
+    spyCancelAf.mockClear();
     target = document.createElement('div');
-    io.observe(target);
+    io.observe(target, { onIntersection: spyOnIntersection });
   });
 
   it('should not call the callback as the target is not intersected', () => {
     const targetId = target.getAttribute('data-io-id');
-    const entry = { target, time: 0, isIntersecting: false };
+    const entry = { target, time: new Date().getTime(), isIntersecting: false };
     io.handleEntryIntersection(entry);
     expect(io.entries[targetId].timerId).toBeUndefined();
-    expect(setTimeout).not.toHaveBeenCalled();
     expect(spyOnIntersection).not.toHaveBeenCalled();
+    expect(mockOnIntersectionOut.mock.calls[0][0].isIntersecting).toEqual(false);
+    expect(mockOnIntersectionOut.mock.calls[0][0].target).toEqual(target);
   });
 
   it('should not call the callback as the user scrolls quickly', () => {
-    const targetId = target.getAttribute('data-io-id');
-    // the target srolls in at t1 = 100
-    io.handleEntryIntersection({ target, time: 100, isIntersecting: true });
-    jest.advanceTimersByTime(100);
-    expect(io.entries[targetId].timerId).toBeDefined();
-    expect(setTimeout).toHaveBeenCalledWith(expect.any(Function), 800);
+    const id = target.getAttribute('data-io-id');
+    const start = new Date().getTime();
+    spyRaf
+      .mockImplementationOnce(cb =>
+        setTimeout(() => {
+          cb(start + 100);
+        }));
+    io.handleEntryIntersection({ target, time: start, isIntersecting: true });
+    jest.runOnlyPendingTimers();
+    expect(io.entries[id].timerId).toBeDefined();
     expect(spyOnIntersection).not.toHaveBeenCalled();
-
+    spyRaf
+      .mockImplementationOnce(cb =>
+        setTimeout(() => {
+          cb(start + 2000);
+        }));
     // the target scolls out at t2 = 200
-    io.handleEntryIntersection({ target, time: 200, isIntersecting: false });
-    jest.advanceTimersByTime(100);
-
-    // We are under the intersectionTime (delta t2 - t1 < 250) or the delay (800ms),
+    io.handleEntryIntersection({ target, time: start + 200, isIntersecting: false });
+    // We are under the cancelDelay (delta t2 - t1 < 250) or the delay (800ms),
     // so the callback cannot be called.
+    expect(spyCancelAf).toHaveBeenCalledWith(1);
     // Advence the timer after the 800ms to see of the callback is called
-    // But it shouldn't as clearTimeout was called
-    expect(clearTimeout).toHaveBeenCalled();
-    jest.advanceTimersByTime(2000);
+    // But it shouldn't as cancelAnimationFrame was called
+    jest.runOnlyPendingTimers();
     expect(spyOnIntersection).not.toHaveBeenCalled();
   });
 
   it('should call the callback as target is intersected and the user scrolls slower', () => {
-    const targetId = target.getAttribute('data-io-id');
-    io.handleEntryIntersection({ target, time: 0, isIntersecting: false });
-
+    const id = target.getAttribute('data-io-id');
+    const start = new Date().getTime();
+    // Prepare the behavior where the user stays longer on the element
+    spyRaf
+      .mockImplementationOnce(cb =>
+        setTimeout(() => {
+          cb(start + 2000);
+        }));
     // the target srolls in at t1 = 100
-    io.handleEntryIntersection({ target, time: 100, isIntersecting: true });
-    jest.advanceTimersByTime(100);
-    expect(io.entries[targetId].timerId).toBeDefined();
-    expect(setTimeout).toHaveBeenCalled();
+    io.handleEntryIntersection({ target, time: start + 100, isIntersecting: true });
+    expect(io.entries[id].timerId).toBeDefined();
     expect(spyOnIntersection).not.toHaveBeenCalled();
-
     // The user stays on the target for enough time
-    jest.advanceTimersByTime(1000);
-    expect(spyOnIntersection).toHaveBeenCalledWith({
-      target,
-      time: 100,
-      isIntersecting: true,
-    }, {
-      observer: {},
-      once: true,
-      onIntersection: null,
-      delay: 800,
-      intersectionTime: 250,
-    });
-  });
-
-  it('should call the callback with custom options', () => {
-    const anotherTarget = document.createElement('div');
-    io.observe(anotherTarget, { once: false, delay: 300 });
-    const targetId = anotherTarget.getAttribute('data-io-id');
-    io.handleEntryIntersection({ target: anotherTarget, time: 0, isIntersecting: false });
-
-    // the target srolls in at t1 = 100
-    io.handleEntryIntersection({ target: anotherTarget, time: 100, isIntersecting: true });
-    jest.advanceTimersByTime(100);
-    expect(io.entries[targetId].timerId).toBeDefined();
-    expect(setTimeout).toHaveBeenCalled();
-    expect(spyOnIntersection).not.toHaveBeenCalled();
-
-    // The user stays on the target for enough time
-    jest.advanceTimersByTime(1000);
-    expect(spyOnIntersection).toHaveBeenCalledWith({
-      target: anotherTarget,
-      time: 100,
-      isIntersecting: true,
-    }, {
-      observer: {},
-      once: false,
-      onIntersection: null,
-      delay: 300,
-      intersectionTime: 250,
-    });
+    jest.runOnlyPendingTimers();
+    expect(spyOnIntersection).toHaveBeenCalled();
+    expect(spyOnIntersection.mock.calls[0][0].isIntersecting).toBeTruthy();
+    expect(spyOnIntersection.mock.calls[0][0].target).toEqual(target);
+    expect(spyOnIntersection.mock.calls[0][1].name).toEqual('bound unobserve');
   });
 });
