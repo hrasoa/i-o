@@ -3,15 +3,12 @@
   "version": "0.1.1-2",
   "description": "IntersectionObserver generic library",
   "main": "src/io.js",
-  "files": [
-    "dist",
-    "src"
-  ],
   "repository": "hrasoa/io",
   "scripts": {
     "build": "NODE_ENV=production webpack --config webpack/build.js",
+    "postbuild": "NODE_ENV=production webpack --config webpack/demo.js",
     "lint": "eslint src/** __tests__/**",
-    "start": "webpack-dev-server --config webpack/dev.js --open",
+    "start": "webpack-dev-server --config webpack/demo.js --open",
     "test": "jest -c __tests__/config/jest.js"
   },
   "author": "Haja Rasoahaingo",
@@ -25,12 +22,15 @@
     "babel-eslint": "^8.2.2",
     "babel-jest": "^22.4.1",
     "babel-loader": "8.0.0-beta.0",
+    "clean-webpack-plugin": "^0.1.18",
+    "css-loader": "^0.28.10",
     "eslint": "^4.18.2",
     "eslint-config-airbnb-base": "^12.1.0",
     "eslint-plugin-import": "^2.9.0",
     "gh-pages": "^1.1.0",
     "html-webpack-plugin": "^3.0.4",
     "jest": "^22.4.2",
+    "style-loader": "^0.20.2",
     "webpack": "^4.0.1",
     "webpack-cli": "^2.0.10",
     "webpack-dev-server": "^3.1.0"
