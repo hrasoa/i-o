@@ -41,7 +41,7 @@ class Io {
   }
 
   /**
-   *
+   * @private
    * @param {Array.<IntersectionObserverEntry>} entries
    */
   handleIntersection(entries) {
@@ -49,7 +49,7 @@ class Io {
   }
 
   /**
-   *
+   * @private
    * @param {IntersectionObserverEntry} entry
    */
   handleEntryIntersection(entry) {
@@ -95,6 +95,15 @@ class Io {
     this.api.disconnect();
   }
 
+  /**
+   *
+   * @param {Element} target
+   * @param {Object} [options={}]
+   * @param {Function} [options.onIntersectionOut=null]
+   * @param {Function} [options.onIntersection=null]
+   * @param {number} [options.delay=800]
+   * @param {number} [options.cancelDelay=250]
+   */
   observe(target, options = {}) {
     if (!this.api) return;
     const id = getEntryId();
