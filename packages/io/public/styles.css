@@ -36,6 +36,7 @@ li:before {
   white-space: nowrap;
 }
 .lazy {
+  border-radius: 4px;
   display: block;
   max-width: 100%;
   min-height: 250px;
@@ -46,12 +47,15 @@ li:before {
 .lazy[src] {
   opacity: 1;
   transform: translate3d(0, -10px, 0);
+  box-shadow: 0 10px 58px -17px rgba(0, 0, 0, .5);
 }
 .hero {
   display: grid;
   grid-template-columns: 1fr 50vw 1fr;
   grid-template-rows: repeat(3, minmax(20vh,auto));
   margin-bottom: 20vh;
+  background: linear-gradient(140deg, #f5d193 20%, #8e677c 80%, #265275);
+  color: rgba(0, 0, 0, .6);
 }
 .hero_content {
   grid-column-start: 2;
