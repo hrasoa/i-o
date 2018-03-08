@@ -23,7 +23,7 @@ io.observe(sentinel, {
 function addImages(amount) {
   const frag = document.createDocumentFragment();
   const metaFrag = document.createDocumentFragment();
-  let url, link, li, img;
+  let url,link, li, img;
   for (let i = 0; i < amount; i++) {
     url = 'https://picsum.photos/400/250?image=' + j;
     link = document.createElement('link');
