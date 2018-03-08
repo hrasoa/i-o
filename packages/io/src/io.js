@@ -56,7 +56,7 @@ class Io {
     const id = entry.target.getAttribute(ATTR_ID);
     const { onIntersection, delay, cancelDelay } = this.getOptions(id);
 
-    if (!onIntersection) return;
+    if (!onIntersection || !this.entries[id]) return;
 
     const { target, isIntersecting, time } = entry;
 

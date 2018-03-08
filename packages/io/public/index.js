@@ -8,6 +8,7 @@ let j = 0;
 const io = new Io({
   // Global callback for all the observers (lazy images)
   onIntersection: (entry, unobserve) => {
+    if (!entry.isIntersecting) return;
     entry.target.src = entry.target.getAttribute('data-src');
     unobserve();
   },
@@ -17,7 +18,7 @@ io.observe(sentinel, {
   // Excute the callback immediatly
   delay: 0,
   // Sepecific callback for this observer (infinite scroll)
-  onIntersection: () => { addImages(10); }
+  onIntersection: (entry) => { if (entry.isIntersecting) addImages(10); }
 });
 
 function addImages(amount) {
