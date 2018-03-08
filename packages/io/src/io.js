@@ -78,6 +78,11 @@ class Io {
     }
   }
 
+  /**
+   *
+   * @param {string} id
+   * @returns {Object}
+   */
   getOptions(id) {
     return this.entries[id] ? { ...this.options, ...this.entries[id].options } : this.options;
   }
