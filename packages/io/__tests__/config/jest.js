@@ -9,6 +9,4 @@ module.exports = {
     'config',
   ],
   collectCoverage: true,
-  // coverageReporters: ['html'],
-  // coverageDirectory: path.resolve(__dirname, '../__tests__/coverage'),
 };

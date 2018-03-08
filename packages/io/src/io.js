@@ -4,7 +4,7 @@ import Observer from './observer';
  *
  * @typedef {Object} IntersectionObserverInit
  * @property {Element} [root=null] The root to use for intersection.
- * @property {string} [rootMargin=0px] Similar to the CSS margin property.
+ * @property {string} [rootMargin='0px'] Similar to the CSS margin property.
  * @property {Array.<number>} [threshold=0] List of threshold(s) at which to trigger callback.
  */
 
@@ -16,7 +16,6 @@ import Observer from './observer';
 
 const DEFAULT_OPTIONS = {
   observer: {},
-  onIntersectionOut: null,
   onIntersection: null,
   delay: 800,
   cancelDelay: 250,
@@ -29,7 +28,6 @@ class Io {
    *
    * @param {Object} [options=undefined]
    * @param {IntersectionObserverInit} [options.observer={}] IntersectionObserver options
-   * @param {Function} [options.onIntersectionOut=null]
    * @param {Function} [options.onIntersection=null]
    * @param {number} [options.delay=800]
    * @param {number} [options.cancelDelay=250]
@@ -41,6 +39,7 @@ class Io {
   }
 
   /**
+   *
    * @private
    * @param {Array.<IntersectionObserverEntry>} entries
    */
@@ -49,23 +48,23 @@ class Io {
   }
 
   /**
+   *
    * @private
    * @param {IntersectionObserverEntry} entry
    */
   handleEntryIntersection(entry) {
+    const id = entry.target.getAttribute(ATTR_ID);
+    const { onIntersection, delay, cancelDelay } = this.getOptions(id);
+
+    if (!onIntersection) return;
+
     const { target, isIntersecting, time } = entry;
-    const id = target.getAttribute(ATTR_ID);
-    const {
-      onIntersectionOut,
-      onIntersection,
-      delay,
-      cancelDelay,
-    } = { ...this.options, ...this.entries[id].options };
+
     this.entries[id][isIntersecting ? 'lastIn' : 'lastOut'] = time;
     const { lastIn = 0, lastOut = 0 } = this.entries[id];
     const unobserve = this.unobserve.bind(this, target, id);
 
-    if (isIntersecting && onIntersection) {
+    if (isIntersecting) {
       const step = (timestamp) => {
         if (timestamp - lastIn < delay) this.entries[id].timerId = requestAnimationFrame(step);
         else onIntersection(entry, unobserve);
@@ -74,9 +73,13 @@ class Io {
     }
 
     if (!isIntersecting) {
-      if (onIntersectionOut) onIntersectionOut(entry, unobserve);
+      onIntersection(entry, unobserve);
       if (lastIn - lastOut < cancelDelay) cancelAnimationFrame(this.entries[id].timerId);
     }
+  }
+
+  getOptions(id) {
+    return { ...this.options, ...this.entries[id].options };
   }
 
   /**
@@ -99,10 +102,9 @@ class Io {
    *
    * @param {Element} target
    * @param {Object} [options={}]
-   * @param {Function} [options.onIntersectionOut=null]
-   * @param {Function} [options.onIntersection=null]
-   * @param {number} [options.delay=800]
-   * @param {number} [options.cancelDelay=250]
+   * @param {Function} [options.onIntersection]
+   * @param {number} [options.delay]
+   * @param {number} [options.cancelDelay]
    */
   observe(target, options = {}) {
     if (!this.api) return;
