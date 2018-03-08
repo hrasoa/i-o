@@ -136,6 +136,10 @@ describe('test the intersection behaviors', () => {
     options = io.getOptions(id);
   });
 
+  afterEach(() => {
+    jest.clearAllTimers();
+  });
+
   it('should call the callback with falsy isIntersecting', () => {
     const entry = { target, time: new Date().getTime(), isIntersecting: false };
     io.handleEntryIntersection(entry);
@@ -153,23 +157,22 @@ describe('test the intersection behaviors', () => {
           cb(start + 1);
         }));
     io.handleEntryIntersection({ target, time: start, isIntersecting: true });
+
+    expect(mockRaf).toHaveBeenCalledTimes(1);
     jest.runOnlyPendingTimers();
+    expect(mockRaf).toHaveBeenCalledTimes(2);
+
     expect(io.entries[id].timerId).toBeDefined();
     expect(mockOnIntersection).not.toHaveBeenCalled();
-    mockRaf
-      .mockImplementationOnce(cb =>
-        setTimeout(() => {
-          cb(start + options.delay + 1);
-        }));
     // the target scolls out at t2 = 200
     io.handleEntryIntersection({ target, time: start + options.cancelDelay - 1, isIntersecting: false });
-    // We are under the cancelDelay (delta t2 - t1 < 250) or the delay (800ms),
-    // so the callback cannot be called.
+    // We are under the cancelDelay
+    // so the callback will be called with falsy isIntersecting
     expect(mockCancelAf).toHaveBeenCalledTimes(1);
-    // Advence the timer after the 800ms to see of the callback is called
+    // Advence the timer after the delay to see of the callback is called
     // But it shouldn't as cancelAnimationFrame was called
-    jest.runOnlyPendingTimers();
     expect(mockOnIntersection.mock.calls[mockOnIntersection.mock.calls.length - 1][0].isIntersecting).toBeFalsy();
+    expect(mockOnIntersection.mock.calls[mockOnIntersection.mock.calls.length - 1][1].name).toEqual('bound unobserve');
   });
 
   it('should call the callback with truthy isIntersecting as target is intersected and the user scrolls slower', () => {
