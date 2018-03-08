@@ -1,5 +1,6 @@
 export default class Observer {
   /**
+   *
    * @param {Function} callback
    * @param {Object} [options=undefined]
    * @param {Element} [options.root=null] The root to use for intersection.
