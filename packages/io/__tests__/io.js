@@ -164,13 +164,11 @@ describe('test the intersection behaviors', () => {
 
     expect(io.entries[id].timerId).toBeDefined();
     expect(mockOnIntersection).not.toHaveBeenCalled();
-    // the target scolls out at t2 = 200
+
+    // The user scrolls out under the cancelDelay
     io.handleEntryIntersection({ target, time: start + options.cancelDelay - 1, isIntersecting: false });
-    // We are under the cancelDelay
-    // so the callback will be called with falsy isIntersecting
+    // The callback will be called with falsy isIntersecting
     expect(mockCancelAf).toHaveBeenCalledTimes(1);
-    // Advence the timer after the delay to see of the callback is called
-    // But it shouldn't as cancelAnimationFrame was called
     expect(mockOnIntersection.mock.calls[mockOnIntersection.mock.calls.length - 1][0].isIntersecting).toBeFalsy();
     expect(mockOnIntersection.mock.calls[mockOnIntersection.mock.calls.length - 1][1].name).toEqual('bound unobserve');
   });
@@ -183,7 +181,6 @@ describe('test the intersection behaviors', () => {
         setTimeout(() => {
           cb(start + options.delay);
         }));
-    // the target srolls in at t1 = 100
     io.handleEntryIntersection({ target, time: start, isIntersecting: true });
     expect(io.entries[id].timerId).toBeDefined();
     expect(mockOnIntersection).not.toHaveBeenCalled();
