@@ -1,6 +1,8 @@
 import Observer from './observer';
 
 /**
+ * https://w3c.github.io/IntersectionObserver/#dom-intersectionobserver-intersectionobserver
+ *
  * @typedef {Object} IntersectionObserver
  * @property {Element} [root=null]
  * @property {string} [rootMargin='0px']
@@ -127,6 +129,10 @@ class Io {
   disconnect() {
     if (!this.api) return;
     this.api.disconnect();
+  }
+
+  takeRecords() {
+    return this.api ? this.api.takeRecords() : null;
   }
 
   /**
