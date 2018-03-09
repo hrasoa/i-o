@@ -1,7 +1,19 @@
 import Observer from './observer';
 
 /**
+ * @typedef {Object} IntersectionObserver
+ * @property {Element} [root=null]
+ * @property {string} [rootMargin='0px']
+ * @property {Array.<number>} [threshold=[0]]
+ * @property {Function} observe
+ * @property {Function} unobserve
+ * @property {Function} disconnect
+ * @property {Function} takeRecords
+ */
+
+/**
  * https://www.w3.org/TR/intersection-observer/#dictdef-intersectionobserverinit
+ *
  * @typedef {Object} IntersectionObserverInit
  * @property {Element} [root=null]
  * @property {string} [rootMargin='0px']
@@ -10,6 +22,7 @@ import Observer from './observer';
 
 /**
  * https://www.w3.org/TR/intersection-observer/#dictdef-intersectionobserverentryinit
+ *
  * @typedef {Object} IntersectionObserverEntry
  * @property {number} time
  * @property {Object} rootBounds
@@ -26,6 +39,11 @@ import Observer from './observer';
  * @property {number} [delay=800]
  * @property {number} [cancelDelay=250]
  */
+
+/**
+ * @constant {DefaultOptions}
+ * @default
+ */
 const DEFAULT_OPTIONS = {
   onIntersection: null,
   delay: 800,
@@ -37,11 +55,16 @@ const DEFAULT_OPTIONS = {
  */
 const ATTR_ID = 'data-io-id';
 
+/**
+ * @class
+ * @property {DefaultOptions} options
+ * @property {Object} entries
+ * @property {IntersectionObserver} api IntersectionObserver instance
+ */
 class Io {
   /**
-   *
    * @param {Object} [options={}]
-   * @param {IntersectionObserverInit} [options.observer={}]
+   * @param {IntersectionObserverInit} [options.observer=undefined]
    * @param {Function} [options.onIntersection=null]
    * @param {number} [options.delay=800]
    * @param {number} [options.cancelDelay=250]
@@ -54,7 +77,6 @@ class Io {
   }
 
   /**
-   *
    * @private
    * @param {Array.<IntersectionObserverEntry>} entries
    */
@@ -63,7 +85,6 @@ class Io {
   }
 
   /**
-   *
    * @private
    * @param {IntersectionObserverEntry} entry
    */
@@ -77,7 +98,7 @@ class Io {
 
     this.entries[id][isIntersecting ? 'lastIn' : 'lastOut'] = time;
     const { lastIn = 0, lastOut = 0 } = this.entries[id];
-    const unobserve = this.unobserve.bind(this, target, id);
+    const unobserve = this.unobserve.bind(this, target);
 
     if (isIntersecting) {
       const step = (timestamp) => {
@@ -94,12 +115,11 @@ class Io {
   }
 
   /**
-   *
    * @param {Element} target
-   * @param {string} id
    */
-  unobserve(target, id) {
+  unobserve(target) {
     if (!this.api) return;
+    const id = target.getAttribute(ATTR_ID);
     this.entries[id] = null;
     this.api.unobserve(target);
   }
@@ -110,7 +130,6 @@ class Io {
   }
 
   /**
-   *
    * @param {Element} target
    * @param {DefaultOptions} [options=undefined]
    */
@@ -124,7 +143,7 @@ class Io {
 }
 
 /**
- *
+ * @private
  * @returns {string}
  */
 function getEntryId() {
@@ -132,7 +151,7 @@ function getEntryId() {
 }
 
 /**
- *
+ * @private
  * @returns {string}
  */
 function getUniq() {
