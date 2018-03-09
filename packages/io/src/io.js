@@ -73,7 +73,8 @@ class Io {
     const { observer, ...rest } = options;
     this.options = { ...DEFAULT_OPTIONS, ...rest };
     this.entries = {};
-    this.api = new this.IntersectionObserver(this.handleIntersection.bind(this), observer);
+    this.api = typeof window !== 'undefined' && window.IntersectionObserver ?
+      new window.IntersectionObserver(this.handleIntersection.bind(this), observer) : null;
   }
 
   /**
@@ -145,9 +146,6 @@ class Io {
     this.api.observe(target);
   }
 }
-
-Io.prototype.IntersectionObserver =
-  (typeof window !== 'undefined' && window.IntersectionObserver) || (() => {});
 
 /**
  * @private

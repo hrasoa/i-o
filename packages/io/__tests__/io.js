@@ -8,7 +8,9 @@ const mockTakeRecords = jest.fn();
 
 jest.useFakeTimers();
 
-const mockIo = jest.spyOn(Io.prototype, 'IntersectionObserver')
+global.IntersectionObserver = jest.fn();
+
+const mockIo = jest.spyOn(global, 'IntersectionObserver')
   .mockImplementation(() => ({
     disconnect: mockDisconnect,
     observe: mockObserve,
