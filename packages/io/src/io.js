@@ -3,15 +3,21 @@ import Observer from './observer';
 /**
  *
  * @typedef {Object} IntersectionObserverInit
- * @property {Element} [root=null] The root to use for intersection.
- * @property {string} [rootMargin='0px'] Similar to the CSS margin property.
- * @property {Array.<number>} [threshold=0] List of threshold(s) at which to trigger callback.
+ * @property {Element} [root=null]
+ * @property {string} [rootMargin='0px']
+ * @property {Array.<number>} [threshold=0]
  */
 
 /**
  *
  * @typedef {Object} IntersectionObserverEntry
  * @property {number} time
+ * @property {Object} rootBounds
+ * @property {Object} boundingClientRect
+ * @property {Object} intersectionRect
+ * @property {boolean} isIntersecting
+ * @property {number} intersectionRatio
+ * @property {Element} target
  */
 
 const DEFAULT_OPTIONS = {
@@ -26,7 +32,7 @@ class Io {
   /**
    *
    * @param {Object} [options=undefined]
-   * @param {IntersectionObserverInit} [options.observer={}] IntersectionObserver options
+   * @param {IntersectionObserverInit} [options.observer={}]
    * @param {Function} [options.onIntersection=null]
    * @param {number} [options.delay=800]
    * @param {number} [options.cancelDelay=250]
@@ -84,7 +90,7 @@ class Io {
    */
   unobserve(target, id) {
     if (!this.api) return;
-    delete this.entries[id];
+    this.entries[id] = null;
     this.api.unobserve(target);
   }
 
@@ -101,7 +107,7 @@ class Io {
    * @param {number} [options.delay]
    * @param {number} [options.cancelDelay]
    */
-  observe(target, options = {}) {
+  observe(target, options) {
     if (!this.api) return;
     const id = getEntryId();
     this.entries[id] = { options: { ...this.options, ...options } };
