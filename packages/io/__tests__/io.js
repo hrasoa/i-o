@@ -144,9 +144,10 @@ describe('test the intersection behaviors', () => {
     const entry = { target, time: new Date().getTime(), isIntersecting: false };
     io.handleEntryIntersection(entry);
     expect(io.entries[id].timerId).toBeUndefined();
-    expect(mockOnIntersection.mock.calls[mockOnIntersection.mock.calls.length - 1][0].isIntersecting).toBeFalsy();
-    expect(mockOnIntersection.mock.calls[mockOnIntersection.mock.calls.length - 1][0].target).toEqual(target);
-    expect(mockOnIntersection.mock.calls[mockOnIntersection.mock.calls.length - 1][1].name).toEqual('bound unobserve');
+    const lastCall = mockOnIntersection.mock.calls.length - 1;
+    expect(mockOnIntersection.mock.calls[lastCall][0].isIntersecting).toBeFalsy();
+    expect(mockOnIntersection.mock.calls[lastCall][0].target).toEqual(target);
+    expect(mockOnIntersection.mock.calls[lastCall][1].name).toEqual('bound unobserve');
   });
 
   it('should call the callback with falsy isIntersecting as the user scrolls quickly', () => {
@@ -166,11 +167,16 @@ describe('test the intersection behaviors', () => {
     expect(mockOnIntersection).not.toHaveBeenCalled();
 
     // The user scrolls out under the cancelDelay
-    io.handleEntryIntersection({ target, time: start + options.cancelDelay - 1, isIntersecting: false });
+    io.handleEntryIntersection({
+      target,
+      time: start + (options.cancelDelay - 1),
+      isIntersecting: false,
+    });
     // The callback will be called with falsy isIntersecting
+    const lastCall = mockOnIntersection.mock.calls.length - 1;
     expect(mockCancelAf).toHaveBeenCalledTimes(1);
-    expect(mockOnIntersection.mock.calls[mockOnIntersection.mock.calls.length - 1][0].isIntersecting).toBeFalsy();
-    expect(mockOnIntersection.mock.calls[mockOnIntersection.mock.calls.length - 1][1].name).toEqual('bound unobserve');
+    expect(mockOnIntersection.mock.calls[lastCall][0].isIntersecting).toBeFalsy();
+    expect(mockOnIntersection.mock.calls[lastCall][1].name).toEqual('bound unobserve');
   });
 
   it('should call the callback with truthy isIntersecting as target is intersected and the user scrolls slower', () => {
@@ -187,8 +193,9 @@ describe('test the intersection behaviors', () => {
     // The user stays on the target for enough time
     jest.runOnlyPendingTimers();
     expect(mockOnIntersection).toHaveBeenCalledTimes(1);
-    expect(mockOnIntersection.mock.calls[mockOnIntersection.mock.calls.length - 1][0].isIntersecting).toBeTruthy();
-    expect(mockOnIntersection.mock.calls[mockOnIntersection.mock.calls.length - 1][0].target).toEqual(target);
-    expect(mockOnIntersection.mock.calls[mockOnIntersection.mock.calls.length - 1][1].name).toEqual('bound unobserve');
+    const lastCall = mockOnIntersection.mock.calls.length - 1;
+    expect(mockOnIntersection.mock.calls[lastCall][0].isIntersecting).toBeTruthy();
+    expect(mockOnIntersection.mock.calls[lastCall][0].target).toEqual(target);
+    expect(mockOnIntersection.mock.calls[lastCall][1].name).toEqual('bound unobserve');
   });
 });
