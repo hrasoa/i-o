@@ -104,7 +104,7 @@ describe('test the mehtods', () => {
     const id = target.getAttribute('data-io-id');
     expect(io.entries[id]).toBeDefined();
     io.unobserve(target, id);
-    expect(io.entries[id]).toBeUndefined();
+    expect(io.entries[id]).toBeNull();
     expect(mockUnobserve).toHaveBeenCalledWith(target);
   });
 

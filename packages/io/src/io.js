@@ -1,7 +1,7 @@
 import Observer from './observer';
 
 /**
- *
+ * https://www.w3.org/TR/intersection-observer/#dictdef-intersectionobserverinit
  * @typedef {Object} IntersectionObserverInit
  * @property {Element} [root=null]
  * @property {string} [rootMargin='0px']
@@ -9,7 +9,7 @@ import Observer from './observer';
  */
 
 /**
- *
+ * https://www.w3.org/TR/intersection-observer/#dictdef-intersectionobserverentryinit
  * @typedef {Object} IntersectionObserverEntry
  * @property {number} time
  * @property {Object} rootBounds
@@ -31,14 +31,15 @@ const ATTR_ID = 'data-io-id';
 class Io {
   /**
    *
-   * @param {Object} [options=undefined]
+   * @param {Object} [options={}]
    * @param {IntersectionObserverInit} [options.observer={}]
    * @param {Function} [options.onIntersection=null]
    * @param {number} [options.delay=800]
    * @param {number} [options.cancelDelay=250]
    */
-  constructor({ observer, ...options } = {}) {
-    this.options = { ...DEFAULT_OPTIONS, ...options };
+  constructor(options = {}) {
+    const { observer, ...rest } = options;
+    this.options = { ...DEFAULT_OPTIONS, ...rest };
     this.entries = {};
     this.api = new Observer(this.handleIntersection.bind(this), observer);
   }
