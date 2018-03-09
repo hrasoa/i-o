@@ -59,7 +59,7 @@ const ATTR_ID = 'data-io-id';
  * @class
  * @property {DefaultOptions} options
  * @property {Object} entries
- * @property {IntersectionObserver} IntersectionObserver
+ * @property {IntersectionObserver} api
  */
 class Io {
   /**
