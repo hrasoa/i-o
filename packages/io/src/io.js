@@ -1,5 +1,3 @@
-import Observer from './observer';
-
 /**
  * https://w3c.github.io/IntersectionObserver/#dom-intersectionobserver-intersectionobserver
  *
@@ -61,7 +59,7 @@ const ATTR_ID = 'data-io-id';
  * @class
  * @property {DefaultOptions} options
  * @property {Object} entries
- * @property {IntersectionObserver} api IntersectionObserver instance
+ * @property {IntersectionObserver} IntersectionObserver
  */
 class Io {
   /**
@@ -72,10 +70,11 @@ class Io {
    * @param {number} [options.cancelDelay=250]
    */
   constructor(options = {}) {
+    if (!this.IntersectionObserver) return;
     const { observer, ...rest } = options;
     this.options = { ...DEFAULT_OPTIONS, ...rest };
     this.entries = {};
-    this.api = new Observer(this.handleIntersection.bind(this), observer);
+    this.api = new this.IntersectionObserver(this.handleIntersection.bind(this), observer);
   }
 
   /**
@@ -147,6 +146,8 @@ class Io {
     this.api.observe(target);
   }
 }
+
+Io.prototype.IntersectionObserver = (typeof window !== 'undefined' && window.IntersectionObserver) || null;
 
 /**
  * @private
