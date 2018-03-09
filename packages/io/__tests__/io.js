@@ -1,26 +1,28 @@
-import IntersectionObserver from '../src/observer';
 import Io, { getEntryId, getUniq } from '../src/io';
 
 const mockDisconnect = jest.fn();
 const mockObserve = jest.fn();
 const mockUnobserve = jest.fn();
 const mockOnIntersection = jest.fn();
+const mockTakeRecords = jest.fn();
 
 jest.useFakeTimers();
 
-jest.mock('../src/observer.js', () =>
-  jest.fn().mockImplementation(() => ({
+const mockIo = jest.spyOn(Io.prototype, 'IntersectionObserver')
+  .mockImplementation(() => ({
     disconnect: mockDisconnect,
     observe: mockObserve,
     unobserve: mockUnobserve,
-  })));
+    takeRecords: mockTakeRecords,
+  }));
 
 beforeEach(() => {
-  IntersectionObserver.mockClear();
+  mockIo.mockClear();
   mockDisconnect.mockClear();
   mockObserve.mockClear();
   mockUnobserve.mockClear();
   mockOnIntersection.mockClear();
+  mockTakeRecords.mockClear();
 });
 
 describe('test utilities', () => {
@@ -38,7 +40,7 @@ describe('test utilities', () => {
 describe('test the constructor', () => {
   test('should create a new instance of Io with default options', () => {
     const io = new Io();
-    expect(IntersectionObserver).toHaveBeenCalledTimes(1);
+    expect(mockIo).toHaveBeenCalledTimes(1);
     expect(io.options).toEqual({
       onIntersection: null,
       delay: 800,
@@ -48,6 +50,7 @@ describe('test the constructor', () => {
     expect(io.api.disconnect).toBeDefined();
     expect(io.api.observe).toBeDefined();
     expect(io.api.unobserve).toBeDefined();
+    expect(io.api.takeRecords).toBeDefined();
   });
 
   test('should create a new instance of Io with custom options', () => {
@@ -55,9 +58,9 @@ describe('test the constructor', () => {
       delay: 400,
       observer: { root: '#root' },
     });
-    expect(IntersectionObserver).toHaveBeenCalledTimes(1);
-    expect(IntersectionObserver.mock.calls[0][0].name).toEqual('bound handleIntersection');
-    expect(IntersectionObserver.mock.calls[0][1]).toEqual({ root: '#root' });
+    expect(mockIo).toHaveBeenCalledTimes(1);
+    expect(mockIo.mock.calls[0][0].name).toEqual('bound handleIntersection');
+    expect(mockIo.mock.calls[0][1]).toEqual({ root: '#root' });
     expect(io.options).toEqual({
       onIntersection: null,
       delay: 400,
@@ -77,14 +80,21 @@ describe('test the mehtods', () => {
     io.disconnect();
     io.observe();
     io.unobserve();
+    io.takeRecords();
     expect(mockDisconnect).not.toHaveBeenCalled();
     expect(mockObserve).not.toHaveBeenCalled();
     expect(mockUnobserve).not.toHaveBeenCalled();
+    expect(mockTakeRecords).not.toHaveBeenCalled();
   });
 
   test('disconnect should have been called once', () => {
     io.disconnect();
     expect(mockDisconnect).toHaveBeenCalledTimes(1);
+  });
+
+  test('should takeRecords', () => {
+    io.takeRecords();
+    expect(mockTakeRecords).toHaveBeenCalledTimes(1);
   });
 
   test('should observe an element', () => {

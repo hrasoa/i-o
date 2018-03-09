@@ -70,7 +70,6 @@ class Io {
    * @param {number} [options.cancelDelay=250]
    */
   constructor(options = {}) {
-    if (!this.IntersectionObserver) return;
     const { observer, ...rest } = options;
     this.options = { ...DEFAULT_OPTIONS, ...rest };
     this.entries = {};
@@ -147,7 +146,8 @@ class Io {
   }
 }
 
-Io.prototype.IntersectionObserver = (typeof window !== 'undefined' && window.IntersectionObserver) || null;
+Io.prototype.IntersectionObserver =
+  (typeof window !== 'undefined' && window.IntersectionObserver) || (() => {});
 
 /**
  * @private
