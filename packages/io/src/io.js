@@ -15,7 +15,6 @@ import Observer from './observer';
  */
 
 const DEFAULT_OPTIONS = {
-  observer: {},
   onIntersection: null,
   delay: 800,
   cancelDelay: 250,
@@ -32,10 +31,10 @@ class Io {
    * @param {number} [options.delay=800]
    * @param {number} [options.cancelDelay=250]
    */
-  constructor(options) {
+  constructor({ observer, ...options } = {}) {
     this.options = { ...DEFAULT_OPTIONS, ...options };
     this.entries = {};
-    this.api = new Observer(this.handleIntersection.bind(this), this.options.observer);
+    this.api = new Observer(this.handleIntersection.bind(this), observer);
   }
 
   /**
@@ -54,9 +53,9 @@ class Io {
    */
   handleEntryIntersection(entry) {
     const id = entry.target.getAttribute(ATTR_ID);
-    const { onIntersection, delay, cancelDelay } = this.getOptions(id);
+    const { onIntersection, delay, cancelDelay } = this.entries[id].options;
 
-    if (!onIntersection || !this.entries[id]) return;
+    if (!onIntersection) return;
 
     const { target, isIntersecting, time } = entry;
 
@@ -65,7 +64,7 @@ class Io {
     const unobserve = this.unobserve.bind(this, target, id);
 
     if (isIntersecting) {
-      const step = function stap(timestamp) {
+      const step = (timestamp) => {
         if (timestamp - lastIn < delay) this.entries[id].timerId = requestAnimationFrame(step);
         else onIntersection(entry, unobserve);
       };
@@ -76,15 +75,6 @@ class Io {
       onIntersection(entry, unobserve);
       if (lastIn - lastOut < cancelDelay) cancelAnimationFrame(this.entries[id].timerId);
     }
-  }
-
-  /**
-   *
-   * @param {string} id
-   * @returns {Object}
-   */
-  getOptions(id) {
-    return this.entries[id] ? { ...this.options, ...this.entries[id].options } : this.options;
   }
 
   /**
@@ -114,7 +104,7 @@ class Io {
   observe(target, options = {}) {
     if (!this.api) return;
     const id = getEntryId();
-    this.entries[id] = { options };
+    this.entries[id] = { options: { ...this.options, ...options } };
     target.setAttribute(ATTR_ID, id);
     this.api.observe(target);
   }

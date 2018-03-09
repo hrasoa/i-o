@@ -39,9 +39,7 @@ describe('test the constructor', () => {
   test('should create a new instance of Io with default options', () => {
     const io = new Io();
     expect(IntersectionObserver).toHaveBeenCalledTimes(1);
-    expect(IntersectionObserver.mock.calls[0][1]).toEqual({});
     expect(io.options).toEqual({
-      observer: {},
       onIntersection: null,
       delay: 800,
       cancelDelay: 250,
@@ -54,15 +52,15 @@ describe('test the constructor', () => {
 
   test('should create a new instance of Io with custom options', () => {
     const io = new Io({
+      delay: 400,
       observer: { root: '#root' },
     });
     expect(IntersectionObserver).toHaveBeenCalledTimes(1);
     expect(IntersectionObserver.mock.calls[0][0].name).toEqual('bound handleIntersection');
     expect(IntersectionObserver.mock.calls[0][1]).toEqual({ root: '#root' });
     expect(io.options).toEqual({
-      observer: { root: '#root' },
       onIntersection: null,
-      delay: 800,
+      delay: 400,
       cancelDelay: 250,
     });
   });
@@ -94,7 +92,9 @@ describe('test the mehtods', () => {
     io.observe(target);
     const id = target.getAttribute('data-io-id');
     expect(id).toMatch(/^io-[\w]{9}$/);
-    expect(io.entries[id]).toEqual({ options: {} });
+    expect(io.entries[id]).toEqual({
+      options: { cancelDelay: 250, delay: 800, onIntersection: null },
+    });
     expect(mockObserve).toHaveBeenCalledWith(target);
   });
 
@@ -133,7 +133,7 @@ describe('test the intersection behaviors', () => {
     target = document.createElement('div');
     io.observe(target, { onIntersection: mockOnIntersection });
     id = target.getAttribute('data-io-id');
-    options = io.getOptions(id);
+    options = io.entries[id].options; // eslint-disable-line prefer-destructuring
   });
 
   afterEach(() => {
