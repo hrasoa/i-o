@@ -57,9 +57,6 @@ const ATTR_ID = 'data-io-id';
 
 /**
  * @class
- * @property {DefaultOptions} options
- * @property {Object} entries
- * @property {IntersectionObserver} api
  */
 class Io {
   /**
@@ -71,8 +68,20 @@ class Io {
    */
   constructor(options = {}) {
     const { observer, ...rest } = options;
+    /**
+     * @type {DefaultOptions}
+     * @member Io
+     */
     this.options = { ...DEFAULT_OPTIONS, ...rest };
+    /**
+     * @type {{lastIn:number,lastOut:number,timerId:number,options:DefaultOptions}} entries
+     * @member Io
+     */
     this.entries = {};
+    /**
+     * @type {IntersectionObserver}
+     * @member Io
+     */
     this.api = typeof window !== 'undefined' && window.IntersectionObserver ?
       new window.IntersectionObserver(this.handleIntersection.bind(this), observer) : null;
   }
