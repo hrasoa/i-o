@@ -20,12 +20,21 @@ import Observer from './observer';
  * @property {Element} target
  */
 
+/**
+ * @typedef {Object} DefaultOptions
+ * @property {Function} [onIntersection=null]
+ * @property {number} [delay=800]
+ * @property {number} [cancelDelay=250]
+ */
 const DEFAULT_OPTIONS = {
   onIntersection: null,
   delay: 800,
   cancelDelay: 250,
 };
 
+/**
+ * @constant {string}
+ */
 const ATTR_ID = 'data-io-id';
 
 class Io {
@@ -103,10 +112,7 @@ class Io {
   /**
    *
    * @param {Element} target
-   * @param {Object} [options={}]
-   * @param {Function} [options.onIntersection]
-   * @param {number} [options.delay]
-   * @param {number} [options.cancelDelay]
+   * @param {DefaultOptions} [options=undefined]
    */
   observe(target, options) {
     if (!this.api) return;
