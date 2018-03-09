@@ -5,7 +5,7 @@ import Observer from './observer';
  * @typedef {Object} IntersectionObserverInit
  * @property {Element} [root=null]
  * @property {string} [rootMargin='0px']
- * @property {Array.<number>} [threshold=0]
+ * @property {Array.<number>} [threshold=[0]]
  */
 
 /**
