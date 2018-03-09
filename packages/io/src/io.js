@@ -65,7 +65,7 @@ class Io {
     const unobserve = this.unobserve.bind(this, target, id);
 
     if (isIntersecting) {
-      const step = (timestamp) => {
+      const step = function stap(timestamp) {
         if (timestamp - lastIn < delay) this.entries[id].timerId = requestAnimationFrame(step);
         else onIntersection(entry, unobserve);
       };
