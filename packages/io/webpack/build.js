@@ -1,8 +1,11 @@
 const path = require('path');
-const CleanWebpackPlugin = require('clean-webpack-plugin');
 
 module.exports = {
   mode: 'production',
+  entry: {
+    io: './src/index.js',
+    'io.polyfill': './src/polyfill.js',
+  },
   module: {
     rules: [
       {
@@ -30,11 +33,8 @@ module.exports = {
       },
     ],
   },
-  plugins: [
-    new CleanWebpackPlugin(['dist']),
-  ],
   output: {
-    filename: 'io.js',
+    filename: '[name].js',
     library: 'Io',
     libraryTarget: 'var',
     path: path.resolve(__dirname, '../dist'),
