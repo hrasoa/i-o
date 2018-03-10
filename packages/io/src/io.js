@@ -86,7 +86,6 @@ class Io {
      */
     this.api = typeof window !== 'undefined' && window.IntersectionObserver ?
       new window.IntersectionObserver(this.handleIntersection.bind(this), observer) : null;
-    this.unobserve = this.unobserve.bind(this);
   }
 
   /**
@@ -115,13 +114,13 @@ class Io {
     if (isIntersecting) {
       const step = (timestamp) => {
         if (timestamp - lastIn < delay) this.entries[id].timerId = requestAnimationFrame(step);
-        else onIntersection(entry, this.unobserve);
+        else onIntersection(entry, () => { this.unobserve(target); });
       };
       this.entries[id].timerId = requestAnimationFrame(step);
     }
 
     if (!isIntersecting) {
-      onIntersection(entry, this.unobserve);
+      onIntersection(entry, () => { this.unobserve(target); });
       if (lastIn - lastOut < cancelDelay) cancelAnimationFrame(this.entries[id].timerId);
     }
   }
