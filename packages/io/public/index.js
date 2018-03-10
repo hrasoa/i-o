@@ -7,7 +7,6 @@ const list = document.querySelector('ul');
 let j = 0;
 
 const io = new Io({
-  delay: 0,
   // Global callback for all the observers (lazy images)
   onIntersection: lazy,
 });
