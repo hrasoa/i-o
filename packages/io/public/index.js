@@ -7,21 +7,24 @@ let j = 0;
 
 const io = new Io({
   // Global callback for all the observers (lazy images)
-  onIntersection: (entry, unobserve) => {
-    if (!entry.isIntersecting) return;
-    entry.target.setAttribute('src', entry.target.getAttribute('data-src'));
-    unobserve(entry.target);
-  },
+  onIntersection: lazy,
 });
 
 io.observe(sentinel, {
   // Excute the callback immediatly
   delay: 0,
   // Sepecific callback for this observer (infinite scroll)
-  onIntersection: (entry) => { if (entry.isIntersecting) addImages(10); },
+  onIntersection: addImages,
 });
 
-function addImages(amount) {
+function lazy(entry) {
+  if (!entry.isIntersecting) return;
+  entry.target.setAttribute('src', entry.target.getAttribute('data-src'));
+  io.unobserve(entry.target);
+}
+
+function addImages() {
+  const amount = 10;
   const frag = document.createDocumentFragment();
   const metaFrag = document.createDocumentFragment();
   let url;
