@@ -10,7 +10,7 @@ const io = new Io({
   onIntersection: (entry, unobserve) => {
     if (!entry.isIntersecting) return;
     entry.target.setAttribute('src', entry.target.getAttribute('data-src'));
-    unobserve();
+    unobserve(entry.target);
   },
 });
 

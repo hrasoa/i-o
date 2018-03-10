@@ -86,6 +86,7 @@ class Io {
      */
     this.api = typeof window !== 'undefined' && window.IntersectionObserver ?
       new window.IntersectionObserver(this.handleIntersection.bind(this), observer) : null;
+    this.unobserve = this.unobserve.bind(this);
   }
 
   /**
@@ -106,7 +107,7 @@ class Io {
 
     if (!onIntersection) return;
 
-    const { target, isIntersecting, time } = entry;
+    const { isIntersecting, time } = entry;
 
     this.entries[id][isIntersecting ? 'lastIn' : 'lastOut'] = time;
     const { lastIn = 0, lastOut = 0 } = this.entries[id];
@@ -114,13 +115,13 @@ class Io {
     if (isIntersecting) {
       const step = (timestamp) => {
         if (timestamp - lastIn < delay) this.entries[id].timerId = requestAnimationFrame(step);
-        else onIntersection(entry, () => { this.unobserve(target); });
+        else onIntersection(entry, this.unobserve);
       };
       this.entries[id].timerId = requestAnimationFrame(step);
     }
 
     if (!isIntersecting) {
-      onIntersection(entry, () => { this.unobserve(target); });
+      onIntersection(entry, this.unobserve);
       if (lastIn - lastOut < cancelDelay) cancelAnimationFrame(this.entries[id].timerId);
     }
   }
