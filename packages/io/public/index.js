@@ -51,7 +51,6 @@ function addImages() {
     metaFrag.appendChild(link);
     j += 1;
   }
-  page += 1;
   list.appendChild(frag);
   document.head.appendChild(metaFrag);
 }
