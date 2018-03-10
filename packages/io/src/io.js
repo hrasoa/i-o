@@ -77,6 +77,7 @@ class Io {
     this.options = { ...DEFAULT_OPTIONS, ...rest };
     /**
      * @type {{lastIn:number,lastOut:number,timerId:number,options:DefaultOptions}}
+     * @member Io
      */
     this.observers = {};
     /**
