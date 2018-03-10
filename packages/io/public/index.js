@@ -5,15 +5,17 @@ import './GitHub-Mark-120px-plus.png';
 const sentinel = document.querySelector('.sentinel');
 const list = document.querySelector('ul');
 let j = 0;
+let page = 0;
 
 const io = new Io({
+  delay: 0,
   // Global callback for all the observers (lazy images)
   onIntersection: lazy,
 });
 
 io.observe(sentinel, {
   // Excute the callback immediatly
-  delay: 0,
+  delay: 100,
   // Sepecific callback for this observer (infinite scroll)
   onIntersection: addImages,
 });
@@ -50,6 +52,7 @@ function addImages() {
     metaFrag.appendChild(link);
     j += 1;
   }
+  page += 1;
   list.appendChild(frag);
   document.head.appendChild(metaFrag);
 }

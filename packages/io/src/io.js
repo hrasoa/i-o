@@ -85,9 +85,7 @@ class Io {
      * @member Io
      */
     this.api = typeof window !== 'undefined' && window.IntersectionObserver ?
-      new window.IntersectionObserver((entries) => {
-        this.handleIntersection(entries);
-      }, observer) : null;
+      new window.IntersectionObserver(this.handleIntersection.bind(this), observer) : null;
   }
 
   /**
@@ -106,7 +104,7 @@ class Io {
     const id = entry.target.getAttribute(ATTR_ID);
     const { onIntersection, delay, cancelDelay } = this.observers[id].options;
 
-    if (!onIntersection) return;
+    if (!onIntersection || !this.observers[id]) return;
 
     const { isIntersecting, time } = entry;
 
@@ -126,7 +124,9 @@ class Io {
 
     if (!isIntersecting) {
       onIntersection(entry);
-      if (lastIn - lastOut < cancelDelay) cancelAnimationFrame(this.observers[id].timerId);
+      if (lastIn - lastOut < cancelDelay && this.observers[id]) {
+        cancelAnimationFrame(this.observers[id].timerId);
+      }
     }
   }
 
