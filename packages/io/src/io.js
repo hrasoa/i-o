@@ -51,6 +51,8 @@ const DEFAULT_OPTIONS = {
 };
 
 /**
+ * Data attribute name that we use to identify our entries
+ *
  * @constant {string}
  */
 const ATTR_ID = 'data-io-id';
@@ -84,6 +86,7 @@ class Io {
      */
     this.api = typeof window !== 'undefined' && window.IntersectionObserver ?
       new window.IntersectionObserver(this.handleIntersection.bind(this), observer) : null;
+    this.unobserve = this.unobserve.bind(this);
   }
 
   /**
@@ -108,18 +111,17 @@ class Io {
 
     this.entries[id][isIntersecting ? 'lastIn' : 'lastOut'] = time;
     const { lastIn = 0, lastOut = 0 } = this.entries[id];
-    const unobserve = this.unobserve.bind(this, target);
 
     if (isIntersecting) {
       const step = (timestamp) => {
         if (timestamp - lastIn < delay) this.entries[id].timerId = requestAnimationFrame(step);
-        else onIntersection(entry, unobserve);
+        else onIntersection(entry, this.unobserve);
       };
       this.entries[id].timerId = requestAnimationFrame(step);
     }
 
     if (!isIntersecting) {
-      onIntersection(entry, unobserve);
+      onIntersection(entry, this.unobserve);
       if (lastIn - lastOut < cancelDelay) cancelAnimationFrame(this.entries[id].timerId);
     }
   }
@@ -144,6 +146,8 @@ class Io {
   }
 
   /**
+   * Watch for an element.
+   *
    * @param {Element} target
    * @param {DefaultOptions} [options=undefined]
    */
@@ -157,6 +161,8 @@ class Io {
 }
 
 /**
+ * Get the data attribute value of one entry
+ *
  * @private
  * @returns {string}
  */
