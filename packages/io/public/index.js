@@ -5,7 +5,6 @@ import './GitHub-Mark-120px-plus.png';
 const sentinel = document.querySelector('.sentinel');
 const list = document.querySelector('ul');
 let j = 0;
-let page = 0;
 
 const io = new Io({
   delay: 0,

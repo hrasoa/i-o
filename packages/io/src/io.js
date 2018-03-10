@@ -89,16 +89,16 @@ class Io {
   }
 
   /**
-   * @private
    * @param {Array.<IntersectionObserverEntry>} entries
+   * @private
    */
   handleIntersection(entries) {
     for (let i = entries.length - 1; i >= 0; i -= 1) this.handleEntryIntersection(entries[i]);
   }
 
   /**
-   * @private
    * @param {IntersectionObserverEntry} entry
+   * @private
    */
   handleEntryIntersection(entry) {
     const id = entry.target.getAttribute(ATTR_ID);
@@ -167,16 +167,16 @@ class Io {
 /**
  * Get the data attribute value of one entry
  *
- * @private
  * @returns {string}
+ * @private
  */
 function getEntryId() {
   return `io-${getUniq()}`;
 }
 
 /**
- * @private
  * @returns {string}
+ * @private
  */
 function getUniq() {
   return Math.random().toString(36).substr(2, 9);
