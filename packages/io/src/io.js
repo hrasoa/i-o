@@ -63,7 +63,7 @@ const ATTR_ID = 'data-io-id';
 const observers = {};
 
 /**
- * @class
+ * @class Io
  */
 class Io {
   /**
