@@ -58,6 +58,11 @@ const DEFAULT_OPTIONS = {
 const ATTR_ID = 'data-io-id';
 
 /**
+ * @type {{lastIn:number,lastOut:number,timerId:number,options:DefaultOptions}}
+ */
+const observers = {};
+
+/**
  * @class
  */
 class Io {
@@ -76,53 +81,11 @@ class Io {
      */
     this.options = { ...DEFAULT_OPTIONS, ...rest };
     /**
-     * @type {{lastIn:number,lastOut:number,timerId:number,options:DefaultOptions}}
-     * @member Io
-     */
-    this.entries = {};
-    /**
      * @type {IntersectionObserver}
      * @member Io
      */
     this.api = typeof window !== 'undefined' && window.IntersectionObserver ?
-      new window.IntersectionObserver(this.handleIntersection.bind(this), observer) : null;
-  }
-
-  /**
-   * @private
-   * @param {Array.<IntersectionObserverEntry>} entries
-   */
-  handleIntersection(entries) {
-    for (let i = entries.length - 1; i >= 0; i -= 1) this.handleEntryIntersection(entries[i]);
-  }
-
-  /**
-   * @private
-   * @param {IntersectionObserverEntry} entry
-   */
-  handleEntryIntersection(entry) {
-    const id = entry.target.getAttribute(ATTR_ID);
-    const { onIntersection, delay, cancelDelay } = this.entries[id].options;
-
-    if (!onIntersection) return;
-
-    const { isIntersecting, time } = entry;
-
-    this.entries[id][isIntersecting ? 'lastIn' : 'lastOut'] = time;
-    const { lastIn = 0, lastOut = 0 } = this.entries[id];
-
-    if (isIntersecting) {
-      const step = (timestamp) => {
-        if (timestamp - lastIn < delay) this.entries[id].timerId = requestAnimationFrame(step);
-        else onIntersection(entry);
-      };
-      this.entries[id].timerId = requestAnimationFrame(step);
-    }
-
-    if (!isIntersecting) {
-      onIntersection(entry);
-      if (lastIn - lastOut < cancelDelay) cancelAnimationFrame(this.entries[id].timerId);
-    }
+      new window.IntersectionObserver(handleIntersection, observer) : null;
   }
 
   /**
@@ -131,7 +94,7 @@ class Io {
   unobserve(target) {
     if (!this.api) return;
     const id = target.getAttribute(ATTR_ID);
-    this.entries[id] = null;
+    observers[id] = null;
     this.api.unobserve(target);
   }
 
@@ -153,9 +116,49 @@ class Io {
   observe(target, options) {
     if (!this.api) return;
     const id = getEntryId();
-    this.entries[id] = { options: { ...this.options, ...options } };
+    observers[id] = { options: { ...this.options, ...options } };
     target.setAttribute(ATTR_ID, id);
     this.api.observe(target);
+  }
+}
+
+/**
+ * @private
+ * @param {Array.<IntersectionObserverEntry>} entries
+ */
+function handleIntersection(entries) {
+  for (let i = entries.length - 1; i >= 0; i -= 1) handleEntryIntersection(entries[i]);
+}
+
+/**
+ * @private
+ * @param {IntersectionObserverEntry} entry
+ */
+function handleEntryIntersection(entry) {
+  const id = entry.target.getAttribute(ATTR_ID);
+  const { onIntersection, delay, cancelDelay } = observers[id].options;
+
+  if (!onIntersection) return;
+
+  const { isIntersecting, time } = entry;
+
+  observers[id][isIntersecting ? 'lastIn' : 'lastOut'] = time;
+  const { lastIn = 0, lastOut = 0 } = observers[id];
+
+  if (isIntersecting) {
+    const step = (timestamp) => {
+      if (timestamp - lastIn < delay) observers[id].timerId = requestAnimationFrame(step);
+      else {
+        cancelAnimationFrame(observers[id].timerId);
+        onIntersection(entry);
+      }
+    };
+    observers[id].timerId = requestAnimationFrame(step);
+  }
+
+  if (!isIntersecting) {
+    onIntersection(entry);
+    if (lastIn - lastOut < cancelDelay) cancelAnimationFrame(observers[id].timerId);
   }
 }
 
@@ -179,4 +182,9 @@ function getUniq() {
 
 export default Io;
 
-export { getEntryId, getUniq };
+export {
+  getEntryId,
+  getUniq,
+  handleEntryIntersection,
+  handleIntersection,
+};
