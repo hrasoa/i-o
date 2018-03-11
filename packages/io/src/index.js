@@ -157,7 +157,10 @@ class Io {
         // Loop again until we reach the delay.
         if (timestamp - lastIn < delay) this.observers[id].timerId = requestAnimationFrame(step);
         // Now we can call onIntersection callback.
-        else onIntersection(entry);
+        else {
+          cancelAnimationFrame(this.observers[id].timerId);
+          onIntersection(entry);
+        }
       };
       // Begin the loop.
       this.observers[id].timerId = requestAnimationFrame(step);

@@ -1,4 +1,4 @@
-import Io from '../src/io';
+import Io from '../src';
 import './styles.css';
 import './GitHub-Mark-120px-plus.png';
 

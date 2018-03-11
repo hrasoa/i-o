@@ -2,13 +2,6 @@ const path = require('path');
 
 module.exports = {
   mode: 'production',
-  entry: {
-    io: './src/index.js',
-    'io.polyfill': [
-      'intersection-observer',
-      './src/index.js',
-    ],
-  },
   stats: {
     colors: true,
     modules: false,
@@ -28,6 +21,7 @@ module.exports = {
               },
             ],
             '@babel/preset-stage-3',
+            '@babel/preset-react',
           ],
         },
       },
