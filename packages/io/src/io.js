@@ -10,9 +10,9 @@
  * cancel the timer triggered when the target was intersecting.
  */
 /**
- * @private
  * @constant {DefaultOptions}
  * @default
+ * @private
  */
 const DEFAULT_OPTIONS = {
   onIntersection: null,
@@ -23,9 +23,9 @@ const DEFAULT_OPTIONS = {
 /**
  * Data attribute name that we use to identify our observers.
  *
- * @private
  * @constant {string}
  * @default
+ * @private
  */
 const ATTR_ID = 'data-io-id';
 
@@ -156,11 +156,8 @@ class Io {
       const step = (timestamp) => {
         // Loop again until we reach the delay.
         if (timestamp - lastIn < delay) this.observers[id].timerId = requestAnimationFrame(step);
-        else {
-          // Now we can call onIntersection callback.
-          cancelAnimationFrame(this.observers[id].timerId);
-          onIntersection(entry);
-        }
+        // Now we can call onIntersection callback.
+        else onIntersection(entry);
       };
       // Begin the loop.
       this.observers[id].timerId = requestAnimationFrame(step);
@@ -193,15 +190,12 @@ class Io {
   }
 
   /**
-   * Clean the target reference and unobserve.
    * {@link https://w3c.github.io/IntersectionObserver/#dom-intersectionobserver-unobserve}
    *
    * @param {Element} target
    */
   unobserve(target) {
     if (!this.api) return;
-    const id = target.getAttribute(ATTR_ID);
-    this.observers[id] = null;
     this.api.unobserve(target);
   }
 
@@ -221,9 +215,7 @@ class Io {
         cancelAnimationFrame(this.observers[id].timerId);
       }
     }
-    this.observers = null;
     this.api.disconnect();
-    this.api = null;
   }
 
   /**

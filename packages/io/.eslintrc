@@ -8,7 +8,7 @@
   "plugins": [
     "import"
   ],
-  "rules": {    
+  "rules": {
     "import/no-extraneous-dependencies": "warn",
     "no-use-before-define": ["error", { "functions": false }]
   }
