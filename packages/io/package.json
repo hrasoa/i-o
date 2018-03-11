@@ -1,6 +1,6 @@
 {
   "name": "@hrasoa/io",
-  "version": "0.1.1-2",
+  "version": "0.1.1-3",
   "description": "IntersectionObserver generic library",
   "main": "src/io.js",
   "repository": "hrasoa/io",
