@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { hot } from 'react-hot-loader';
+import './styles.css';
 
 class App extends Component {
   constructor(props) {

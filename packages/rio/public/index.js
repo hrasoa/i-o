@@ -1,10 +1,9 @@
 import React from 'react';
 import { render } from 'react-dom';
-import App from './App';
-import './styles.css';
+import Demo from '../src/Demo';
 import './GitHub-Mark-120px-plus.png';
 
 render(
-  <App />,
+  <Demo />,
   document.getElementById('root'),
 );
