@@ -1,12 +1,13 @@
 const path = require('path');
 
-console.log('process.env.NODE_ENV', process.env.NODE_ENV);
-
 module.exports = {
   mode: 'production',
   entry: {
-    io: './src/index.js',
-    'io.polyfill': './src/polyfill.js',
+    io: './src/io.js',
+    'io.polyfill': [
+      'intersection-observer',
+      './src/io.js',
+    ],
   },
   stats: {
     colors: true,
@@ -35,7 +36,8 @@ module.exports = {
   output: {
     filename: '[name].js',
     library: 'Io',
-    libraryTarget: 'var',
+    libraryTarget: 'umd',
+    libraryExport: 'default',
     path: path.resolve(__dirname, '../dist'),
   },
 };
