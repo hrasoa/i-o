@@ -1,12 +1,16 @@
+const path = require('path');
+const minimist = require('minimist');
 const config = require('./build.js');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 
-const { module: { rules } } = config;
+const argv = minimist(process.argv);
+const { stats, module: { rules } } = config;
 
 module.exports = {
   mode: process.env.NODE_ENV || 'development',
   entry: './public/index.js',
   devtool: 'source-map',
+  stats,
   module: {
     rules: rules.concat([
       {
@@ -33,5 +37,9 @@ module.exports = {
   ],
   devServer: {
     contentBase: './dist',
+    stats,
+  },
+  output: {
+    path: path.resolve(__dirname, argv['output-path'] || '../dist'),
   },
 };
