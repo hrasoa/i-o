@@ -10,7 +10,7 @@
  * cancel the timer triggered when the target was intersecting.
  */
 /**
- * @readonly
+ * @private
  * @constant {DefaultOptions}
  * @default
  */
@@ -23,36 +23,37 @@ const DEFAULT_OPTIONS = {
 /**
  * Data attribute name that we use to identify our observers.
  *
- * @readonly
+ * @private
  * @constant {string}
+ * @default
  */
 const ATTR_ID = 'data-io-id';
 
 /**
- * Class Io
+ * {@link https://www.w3.org/TR/intersection-observer/#dictdef-intersectionobserverinit}
+ *
+ * @typedef {Object} IntersectionObserverInit
+ * @property {Element} [root=null]
+ * @property {string} [rootMargin='0px']
+ * @property {Array.<number>} [threshold=[0]]
+ */
+/**
+ * @param {Object} [options=undefined]
+ * @param {IntersectionObserverInit} [options.observer=undefined]
+ * @param {Function} [options.onIntersection=null]
+ * @param {number} [options.delay=800]
+ * @param {number} [options.cancelDelay=250]
  */
 class Io {
   /**
-   * {@link https://www.w3.org/TR/intersection-observer/#dictdef-intersectionobserverinit}
-   *
-   * @typedef {Object} IntersectionObserverInit
-   * @property {Element} [root=null]
-   * @property {string} [rootMargin='0px']
-   * @property {Array.<number>} [threshold=[0]]
-   */
-  /**
-   * @param {Object} [options=undefined]
-   * @param {IntersectionObserverInit} [options.observer=undefined]
-   * @param {Function} [options.onIntersection=null]
-   * @param {number} [options.delay=800]
-   * @param {number} [options.cancelDelay=250]
    * @constructor
    */
   constructor(options) {
     const { observer, ...rest } = options || {};
-
     /**
+     * @readOnly
      * @type {DefaultOptions}
+     * @alias Io.options
      * @memberOf Io
      */
     this.options = { ...DEFAULT_OPTIONS, ...rest };
@@ -67,7 +68,9 @@ class Io {
      * @property {DefaultOptions} options
      */
     /**
-     * @type {Object.<string, Observer>}
+     * @readOnly
+     * @type {Object<string, Observer>}
+     * @alias Io.observers
      * @memberOf Io
      */
     this.observers = {};
@@ -85,7 +88,9 @@ class Io {
      * @property {Function} takeRecords
      */
     /**
+     * @readOnly
      * @type {IntersectionObserver}
+     * @alias Io.api
      * @memberOf Io
      */
     // Set as null if IntersectionObserver is not supported
@@ -117,7 +122,7 @@ class Io {
    */
   /** IntersectionObserver callback
    *
-   * @param {Array.<IntersectionObserverEntry>} entries
+   * @param {Array<IntersectionObserverEntry>} entries
    * @private
    */
   handleIntersection(entries) {
