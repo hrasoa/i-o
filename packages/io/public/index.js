@@ -13,7 +13,7 @@ const io = new Io({
 
 io.observe(sentinel, {
   // Excute the callback immediatly
-  delay: 100,
+  delay: 0,
   // Sepecific callback for this observer (infinite scroll)
   onIntersection: addImages,
 });
@@ -24,7 +24,8 @@ function lazy(entry) {
   io.unobserve(entry.target);
 }
 
-function addImages() {
+function addImages(entry) {
+  if (!entry.isIntersecting) return;
   const amount = 10;
   const frag = document.createDocumentFragment();
   const metaFrag = document.createDocumentFragment();
