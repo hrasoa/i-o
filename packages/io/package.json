@@ -4,7 +4,7 @@
   "description": "IntersectionObserver generic library",
   "main": "src/io.js",
   "repository": "hrasoa/io",
-  "scripts": {
+  "scripts": {    
     "prebuild": "rimraf ./dist",
     "build": "npm run build:lib && npm run build:demo",
     "build:lib": "NODE_ENV=production webpack --config webpack/build.js",

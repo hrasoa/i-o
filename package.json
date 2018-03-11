@@ -4,6 +4,7 @@
   "private": true,
   "description": "IntersectionObserver generic library",
   "scripts": {
+    "doc:io": "documentation readme packages/io/src/io.js --section=Api",
     "postpublish": "gh-pages -d dist"
   },
   "repository": {
@@ -20,6 +21,7 @@
   ],
   "homepage": "https://hrasoa.github.io/io/",
   "devDependencies": {
+    "documentation": "^6.1.0",
     "gh-pages": "^1.1.0",
     "lerna": "^2.9.0"
   }
