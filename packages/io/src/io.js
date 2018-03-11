@@ -1,14 +1,16 @@
 /**
- * Default options of the Io class
+ * Default options of our Io class.
  *
  * @typedef {Object} DefaultOptions
- * @property {Function} [onIntersection=null] Executed eacth time the intersection changes.
- * @property {number} [delay=800] Time before executing the onIntersection callback when
- * the intersection is truthy (in ms).
- * @property {number} [cancelDelay=250] Time before canceling previous onIntersection calls (in ms).
+ * @property {Function} [onIntersection=null] Executed each time the intersection changes.
+ * @property {number} [delay=800]
+ * Time before executing the onIntersection callback when the target instersects (in ms).
+ * @property {number} [cancelDelay=250]
+ * When the target goes from interescting to not-intersecting within this delay,
+ * cancel the timer triggered when the target was intersecting.
  */
-
 /**
+ * @readonly
  * @constant {DefaultOptions}
  * @default
  */
@@ -19,8 +21,9 @@ const DEFAULT_OPTIONS = {
 };
 
 /**
- * Data attribute name that we use to identify our observers
+ * Data attribute name that we use to identify our observers.
  *
+ * @readonly
  * @constant {string}
  */
 const ATTR_ID = 'data-io-id';
@@ -30,7 +33,7 @@ const ATTR_ID = 'data-io-id';
  */
 class Io {
   /**
-   * https://www.w3.org/TR/intersection-observer/#dictdef-intersectionobserverinit
+   * {@link https://www.w3.org/TR/intersection-observer/#dictdef-intersectionobserverinit}
    *
    * @typedef {Object} IntersectionObserverInit
    * @property {Element} [root=null]
@@ -43,31 +46,39 @@ class Io {
    * @param {Function} [options.onIntersection=null]
    * @param {number} [options.delay=800]
    * @param {number} [options.cancelDelay=250]
+   * @constructor
    */
   constructor(options) {
     const { observer, ...rest } = options || {};
 
     /**
      * @type {DefaultOptions}
-     * @member Io
+     * @memberOf Io
      */
     this.options = { ...DEFAULT_OPTIONS, ...rest };
 
     /**
      * Each new observer is stored in this variable
      *
-     * @type {Object.<string, {lastIn:number,lastOut:number,timerId:number,options:DefaultOptions}>}
-     * @member Io
+     * @typedef {Object} Observer
+     * @property {number} lastIn Last time the observer was intersecting
+     * @property {number} lastOut Last time the observer was not intersecting anymore
+     * @property {number} timerId requestAnimationFrame id
+     * @property {DefaultOptions} options
+     */
+    /**
+     * @type {Object.<string, Observer>}
+     * @memberOf Io
      */
     this.observers = {};
 
     /**
-     * https://w3c.github.io/IntersectionObserver/#dom-intersectionobserver-intersectionobserver
+     * {@link https://w3c.github.io/IntersectionObserver/#dom-intersectionobserver-intersectionobserver}
      *
      * @typedef {Object} IntersectionObserver
      * @property {Element} [root=null]
      * @property {string} [rootMargin='0px']
-     * @property {Array.<number>} [threshold=[0]]
+     * @property {number|Array.<number>} [threshold=0]
      * @property {Function} observe
      * @property {Function} unobserve
      * @property {Function} disconnect
@@ -75,13 +86,14 @@ class Io {
      */
     /**
      * @type {IntersectionObserver}
-     * @member Io
+     * @memberOf Io
      */
     // Set as null if IntersectionObserver is not supported
     // We also test the window object for server side rendering compatibility
     this.api = typeof window !== 'undefined' && window.IntersectionObserver ?
-      new window.IntersectionObserver(this.handleIntersection.bind(this), observer) : null;
-    if (typeof window !== 'undefined' && !this.api) {
+      new IntersectionObserver(this.handleIntersection.bind(this), observer) : null;
+
+    if (typeof window !== 'undefined' && !window.IntersectionObserver) {
       console.warn([
         '/!\\ Your current browser does not support IntersectionObserver.',
         'Please upgrade it or consider using a polyfill.',
@@ -92,7 +104,7 @@ class Io {
   }
 
   /**
-   * https://www.w3.org/TR/intersection-observer/#dictdef-intersectionobserverentryinit
+   * {@link https://www.w3.org/TR/intersection-observer/#dictdef-intersectionobserverentryinit}
    *
    * @typedef {Object} IntersectionObserverEntry
    * @property {number} time
@@ -122,7 +134,7 @@ class Io {
     if (!(id && this.observers[id])) return;
 
     const { onIntersection, delay, cancelDelay } = this.observers[id].options;
-    // Exit when no callback is provided
+    // Exit when no callback is provided.
     if (!onIntersection) return;
 
     const { isIntersecting, time } = entry;
@@ -132,7 +144,7 @@ class Io {
     const { lastIn = 0, lastOut = 0 } = this.observers[id];
 
     if (isIntersecting) {
-      // When isIntersecting is truthy, we want to call the "onIntersection" callback
+      // When the target is intersecting, we want to call the "onIntersection" callback
       // only after the "delay" provided in the options.
       // We assume that if the user scrolls quickly, we do not need to
       // execute that callback, saving extra operations on the scroll.
@@ -150,7 +162,7 @@ class Io {
     }
 
     if (!isIntersecting) {
-      // No need to delay the callback when isIntersecting is falsy
+      // No need to delay the callback when does not intersect.
       onIntersection(entry);
       // Cancel the loop we triggered previously if the user scrolls too quickly.
       if (lastIn - lastOut < cancelDelay) {
@@ -162,7 +174,7 @@ class Io {
   /**
    * Watch for an element. We also merge the current observer options
    * with the current instance options.
-   * https://w3c.github.io/IntersectionObserver/#dom-intersectionobserver-observe
+   * {@link https://w3c.github.io/IntersectionObserver/#dom-intersectionobserver-observe}
    *
    * @param {Element} target
    * @param {DefaultOptions} [options=undefined]
@@ -176,7 +188,8 @@ class Io {
   }
 
   /**
-   * https://w3c.github.io/IntersectionObserver/#dom-intersectionobserver-unobserve
+   * Clean the target reference and unobserve.
+   * {@link https://w3c.github.io/IntersectionObserver/#dom-intersectionobserver-unobserve}
    *
    * @param {Element} target
    */
@@ -188,16 +201,28 @@ class Io {
   }
 
   /**
-   * https://w3c.github.io/IntersectionObserver/#dom-intersectionobserver-disconnect
+   * Clean the instance and disconnect.
+   * {@link https://w3c.github.io/IntersectionObserver/#dom-intersectionobserver-disconnect}
    *
    */
   disconnect() {
     if (!this.api) return;
+    const ids = Object.keys(this.observers);
+    let id;
+    // Clean-up pending timers.
+    for (let i = ids.length - 1; i >= 0; i -= 1) {
+      id = ids[i];
+      if (this.observers[id] && this.observers[id].timerId) {
+        cancelAnimationFrame(this.observers[id].timerId);
+      }
+    }
+    this.observers = null;
     this.api.disconnect();
+    this.api = null;
   }
 
   /**
-   * https://w3c.github.io/IntersectionObserver/#dom-intersectionobserver-takerecords
+   * {@link https://w3c.github.io/IntersectionObserver/#dom-intersectionobserver-takerecords}
    *
    */
   takeRecords() {
@@ -206,7 +231,7 @@ class Io {
 }
 
 /**
- * Get the data attribute id value of the observer
+ * Get the data attribute id value of the observer.
  *
  * @returns {string}
  * @private
