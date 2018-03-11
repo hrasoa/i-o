@@ -1,9 +1,7 @@
 const path = require('path');
-const minimist = require('minimist');
 const config = require('./build.js');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 
-const argv = minimist(process.argv);
 const { stats, module: { rules } } = config;
 
 module.exports = {
@@ -40,6 +38,6 @@ module.exports = {
     stats,
   },
   output: {
-    path: path.resolve(__dirname, argv['output-path'] || '../dist'),
+    path: path.resolve(__dirname, '../dist'),
   },
 };

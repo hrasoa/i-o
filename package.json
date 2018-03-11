@@ -3,6 +3,9 @@
   "version": "0.0.0",
   "private": true,
   "description": "IntersectionObserver generic library",
+  "scripts": {
+    "postpublish": "gh-pages -d dist"
+  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/hrasoa/io.git"
@@ -12,9 +15,12 @@
   "bugs": {
     "url": "https://github.com/hrasoa/io/issues"
   },
-  "workspaces": ["packages/*"],
+  "workspaces": [
+    "packages/*"
+  ],
   "homepage": "https://hrasoa.github.io/io/",
   "devDependencies": {
+    "gh-pages": "^1.1.0",
     "lerna": "^2.9.0"
   }
 }
