@@ -5,5 +5,5 @@ import './GitHub-Mark-120px-plus.png';
 
 render(
   <h1>Hello, world!</h1>,
-  document.getElementById('root')
+  document.getElementById('root'),
 );
