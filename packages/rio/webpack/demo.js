@@ -18,13 +18,6 @@ module.exports = {
           { loader: 'css-loader' },
         ],
       },
-      {
-        test: /\.(png|jpg|gif)$/,
-        loader: 'file-loader',
-        options: {
-          name: '[name].[ext]',
-        },
-      },
     ]),
   },
   plugins: [

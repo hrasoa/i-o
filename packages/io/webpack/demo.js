@@ -6,7 +6,7 @@ const { stats, module: { rules } } = config;
 
 module.exports = {
   mode: process.env.NODE_ENV || 'development',
-  entry: './public/index.js',
+  entry: './demo/index.js',
   devtool: 'source-map',
   stats,
   module: {
@@ -18,19 +18,12 @@ module.exports = {
           { loader: 'css-loader' },
         ],
       },
-      {
-        test: /\.(png|jpg|gif)$/,
-        loader: 'file-loader',
-        options: {
-          name: '[name].[ext]',
-        },
-      },
     ]),
   },
   plugins: [
     new HtmlWebpackPlugin({
       title: 'Io',
-      template: './public/index.html',
+      template: './demo/index.html',
     }),
   ],
   devServer: {

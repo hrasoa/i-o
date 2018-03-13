@@ -23,6 +23,9 @@ module.exports = {
             '@babel/preset-stage-3',
             '@babel/preset-react',
           ],
+          plugins: [
+            'react-hot-loader/babel',
+          ],
         },
       },
     ],
