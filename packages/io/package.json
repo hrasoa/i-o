@@ -4,7 +4,7 @@
   "description": "IntersectionObserver generic library",
   "main": "src/index.js",
   "repository": "hrasoa/io",
-  "scripts": {    
+  "scripts": {
     "prebuild": "rimraf ./dist",
     "build": "npm run build:lib && npm run build:demo",
     "build:lib": "NODE_ENV=production webpack --config webpack/build.js",
@@ -29,7 +29,6 @@
     "eslint": "^4.18.2",
     "eslint-config-airbnb-base": "^12.1.0",
     "eslint-plugin-import": "^2.9.0",
-    "file-loader": "^1.1.11",
     "html-webpack-plugin": "^3.0.4",
     "jest": "^22.4.2",
     "rimraf": "^2.6.2",

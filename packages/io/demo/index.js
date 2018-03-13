@@ -1,6 +1,5 @@
 import Io from '../src';
 import './styles.css';
-import './GitHub-Mark-120px-plus.png';
 
 const sentinel = document.querySelector('.sentinel');
 const list = document.querySelector('ul');

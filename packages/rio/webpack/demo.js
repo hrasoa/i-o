@@ -6,7 +6,7 @@ const { stats, module: { rules } } = config;
 
 module.exports = {
   mode: process.env.NODE_ENV || 'development',
-  entry: './public/index.js',
+  entry: './demo/index.js',
   devtool: 'source-map',
   stats,
   module: {
@@ -23,7 +23,7 @@ module.exports = {
   plugins: [
     new HtmlWebpackPlugin({
       title: 'Io',
-      template: './public/index.html',
+      template: './demo/index.html',
     }),
   ],
   devServer: {
