@@ -147,9 +147,6 @@ class Io {
     if (!(id && this.observers[id])) return;
 
     const { onIntersection, delay, cancelDelay } = this.observers[id].options;
-    // Exit when no callback is provided.
-    if (!onIntersection) return;
-
     const { isIntersecting, time } = entry;
     // Each time the interesection changes, store the current time.
     // This help us figure out when to call the onIntersection callback.
@@ -198,7 +195,8 @@ class Io {
    * io.observe(image, { delay: 0 });
    */
   observe(target, options) {
-    if (!this.api) return;
+    const opts = { options: { ...this.options, ...options } };
+    if (!this.api && !opts.onIntersection) return;
     const id = getEntryId();
     this.observers[id] = { options: { ...this.options, ...options } };
     target.setAttribute(ATTR_ID, id);
