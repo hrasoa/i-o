@@ -196,7 +196,7 @@ class Io {
    */
   observe(target, options) {
     const opts = { options: { ...this.options, ...options } };
-    if (!this.api && !opts.onIntersection) return;
+    if (!this.api || !opts.onIntersection) return;
     const id = getEntryId();
     this.observers[id] = { options: { ...this.options, ...options } };
     target.setAttribute(ATTR_ID, id);
