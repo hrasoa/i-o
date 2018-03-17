@@ -1,4 +1,4 @@
-import Io, { getEntryId, getUniq } from '../src/io';
+import Io, { getEntryId, getUniq } from '../src';
 
 const mockDisconnect = jest.fn();
 const mockObserve = jest.fn();
@@ -116,7 +116,6 @@ describe('test the mehtods', () => {
     const id = target.getAttribute('data-io-id');
     expect(io.observers[id]).toBeDefined();
     io.unobserve(target, id);
-    expect(io.observers[id]).toBeNull();
     expect(mockUnobserve).toHaveBeenCalledWith(target);
   });
 
