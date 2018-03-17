@@ -12,7 +12,7 @@
 -   [Types](#types)
     -   [Options](#options)
     -   [IntersectionObserverInit](#intersectionobserverinit)
--   [IntersectionObserverEntry](#intersectionobserverentry)
+    -   [IntersectionObserverEntry](#intersectionobserverentry)
 
 ## Io
 
@@ -114,7 +114,7 @@ Type: [Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Globa
 -   `rootMargin` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)?** 
 -   `threshold` **[Array](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array)&lt;[number](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number)>?** 
 
-## IntersectionObserverEntry
+### IntersectionObserverEntry
 
 <https://www.w3.org/TR/intersection-observer/#dictdef-intersectionobserverentryinit>
 
