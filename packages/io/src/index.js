@@ -44,7 +44,11 @@ const ATTR_ID = 'data-io-id';
  * @param {number} [options.delay=800]
  * @param {number} [options.cancelDelay=250]
  * @example
- * const io = new Io({ delay: 0 });
+ * const io = new Io({
+ *   onIntersection: (entry) => {
+ *     // do something
+ *   }
+ * });
  */
 class Io {
   /**
@@ -191,7 +195,7 @@ class Io {
    * @param {Options} [options]
    * @example
    * const image = document.querySelector('img');
-   * io.observe(image, { delay: 0 });
+   * io.observe(image);
    */
   observe(target, options) {
     if (!this.api) return;

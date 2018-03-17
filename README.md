@@ -27,7 +27,9 @@
 
 ```javascript
 const io = new Io({
-  delay: 0,
+  onIntersection: (entry) => {
+    // do something
+  }
 });
 ```
 
