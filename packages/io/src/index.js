@@ -1,7 +1,7 @@
 /**
  * Default options of our Io class.
  *
- * @typedef {Object} DefaultOptions
+ * @typedef {Object} Options
  * @property {Function} [onIntersection=null] Executed each time the intersection changes.
  * @property {number} [delay=800]
  * Time before executing the onIntersection callback when the target instersects (in ms).
@@ -10,7 +10,7 @@
  * cancel the timer triggered when the target was intersecting.
  */
 /**
- * @constant {DefaultOptions}
+ * @constant {Options}
  * @default
  * @private
  */
@@ -38,8 +38,8 @@ const ATTR_ID = 'data-io-id';
  * @property {Array.<number>} [threshold=[0]]
  */
 /**
- * @param {Object} [options=undefined]
- * @param {IntersectionObserverInit} [options.observer=undefined]
+ * @param {Object} [options]
+ * @param {IntersectionObserverInit} [options.observer]
  * @param {Function} [options.onIntersection=null]
  * @param {number} [options.delay=800]
  * @param {number} [options.cancelDelay=250]
@@ -51,33 +51,35 @@ class Io {
   constructor(options) {
     const { observer, ...rest } = options || {};
     /**
-     * @readOnly
-     * @type {DefaultOptions}
-     * @alias Io.options
-     * @memberOf Io
+     * @private
+     * @type {Options}
+     * @alias options
+     * @member
      */
     this.options = { ...DEFAULT_OPTIONS, ...rest };
 
     /**
      * Each new observer is stored in this variable
      *
+     * @private
      * @typedef {Object} Observer
      * @property {number} lastIn Last time the observer was intersecting
      * @property {number} lastOut Last time the observer was not intersecting anymore
      * @property {number} timerId requestAnimationFrame id
-     * @property {DefaultOptions} options
+     * @property {Options} options
      */
     /**
-     * @readOnly
+     * @private
      * @type {Object<string, Observer>}
-     * @alias Io.observers
-     * @memberOf Io
+     * @alias observers
+     * @member
      */
     this.observers = {};
 
     /**
      * {@link https://w3c.github.io/IntersectionObserver/#dom-intersectionobserver-intersectionobserver}
      *
+     * @private
      * @typedef {Object} IntersectionObserver
      * @property {Element} [root=null]
      * @property {string} [rootMargin='0px']
@@ -88,10 +90,10 @@ class Io {
      * @property {Function} takeRecords
      */
     /**
-     * @readOnly
+     * @private
      * @type {IntersectionObserver}
-     * @alias Io.api
-     * @memberOf Io
+     * @alias api
+     * @member
      */
     // Set as null if IntersectionObserver is not supported
     // We also test the window object for server side rendering compatibility
@@ -111,6 +113,7 @@ class Io {
   /**
    * {@link https://www.w3.org/TR/intersection-observer/#dictdef-intersectionobserverentryinit}
    *
+   * @private
    * @typedef {Object} IntersectionObserverEntry
    * @property {number} time
    * @property {Object} rootBounds
@@ -181,8 +184,9 @@ class Io {
    * with the current instance options.
    * {@link https://w3c.github.io/IntersectionObserver/#dom-intersectionobserver-observe}
    *
+   * @member {Function}
    * @param {Element} target
-   * @param {DefaultOptions} [options=undefined]
+   * @param {Options} [options]
    */
   observe(target, options) {
     if (!this.api) return;
@@ -195,6 +199,7 @@ class Io {
   /**
    * {@link https://w3c.github.io/IntersectionObserver/#dom-intersectionobserver-unobserve}
    *
+   * @member {Function}
    * @param {Element} target
    */
   unobserve(target) {
@@ -206,6 +211,7 @@ class Io {
    * Clean the instance and disconnect.
    * {@link https://w3c.github.io/IntersectionObserver/#dom-intersectionobserver-disconnect}
    *
+   * @member {Function}
    */
   disconnect() {
     if (!this.api) return;
@@ -224,6 +230,7 @@ class Io {
   /**
    * {@link https://w3c.github.io/IntersectionObserver/#dom-intersectionobserver-takerecords}
    *
+   * @member {Function}
    */
   takeRecords() {
     return this.api ? this.api.takeRecords() : null;

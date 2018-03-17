@@ -1,0 +1,6 @@
+toc:
+  - Io
+  - name: Types
+    children:
+      - Options
+      - IntersectionObserverInit

@@ -4,7 +4,7 @@
   "private": true,
   "description": "IntersectionObserver generic library",
   "scripts": {
-    "doc:io": "documentation readme packages/io/src/io.js --section=Api",
+    "doc:io": "documentation readme --config documentation.yml packages/io/src/index.js --section=Api",
     "postpublish": "gh-pages -d dist"
   },
   "repository": {
