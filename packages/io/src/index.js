@@ -119,7 +119,6 @@ class Io {
   /**
    * {@link https://www.w3.org/TR/intersection-observer/#dictdef-intersectionobserverentryinit}
    *
-   * @private
    * @typedef {Object} IntersectionObserverEntry
    * @property {number} time
    * @property {Object} rootBounds

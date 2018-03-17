@@ -12,6 +12,7 @@
 -   [Types](#types)
     -   [Options](#options)
     -   [IntersectionObserverInit](#intersectionobserverinit)
+-   [IntersectionObserverEntry](#intersectionobserverentry)
 
 ## Io
 
@@ -112,3 +113,19 @@ Type: [Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Globa
 -   `root` **[Element](https://developer.mozilla.org/docs/Web/API/Element)?** 
 -   `rootMargin` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)?** 
 -   `threshold` **[Array](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array)&lt;[number](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number)>?** 
+
+## IntersectionObserverEntry
+
+<https://www.w3.org/TR/intersection-observer/#dictdef-intersectionobserverentryinit>
+
+Type: [Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)
+
+**Properties**
+
+-   `time` **[number](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number)** 
+-   `rootBounds` **[Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)** 
+-   `boundingClientRect` **[Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)** 
+-   `intersectionRect` **[Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)** 
+-   `isIntersecting` **[boolean](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Boolean)** 
+-   `intersectionRatio` **[number](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number)** 
+-   `target` **[Element](https://developer.mozilla.org/docs/Web/API/Element)** 
