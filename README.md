@@ -50,7 +50,7 @@ Type: [Function](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Sta
 
 ```javascript
 const image = document.querySelector('img');
-io.observe(image);
+io.observe(image, { delay: 0 });
 ```
 
 ### unobserve

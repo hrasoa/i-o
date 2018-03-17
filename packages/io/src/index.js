@@ -193,9 +193,10 @@ class Io {
    * @member {Function}
    * @param {Element} target
    * @param {Options} [options]
+   * @public
    * @example
    * const image = document.querySelector('img');
-   * io.observe(image);
+   * io.observe(image, { delay: 0 });
    */
   observe(target, options) {
     if (!this.api) return;
@@ -210,6 +211,7 @@ class Io {
    *
    * @member {Function}
    * @param {Element} target
+   * @public
    * @example
    * const image = document.querySelector('img');
    * io.unobserve(image);
@@ -224,6 +226,7 @@ class Io {
    * {@link https://w3c.github.io/IntersectionObserver/#dom-intersectionobserver-disconnect}
    *
    * @member {Function}
+   * @public
    */
   disconnect() {
     if (!this.api) return;
@@ -243,6 +246,7 @@ class Io {
    * {@link https://w3c.github.io/IntersectionObserver/#dom-intersectionobserver-takerecords}
    *
    * @member {Function}
+   * @public
    */
   takeRecords() {
     return this.api ? this.api.takeRecords() : null;
