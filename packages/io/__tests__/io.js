@@ -58,7 +58,7 @@ describe('test the constructor', () => {
   test('should create a new instance of Io with custom options', () => {
     const io = new Io({
       delay: 400,
-      observer: { root: '#root' },
+      observerInit: { root: '#root' },
     });
     expect(mockIo).toHaveBeenCalledTimes(1);
     expect(mockIo.mock.calls[0][0].name).toEqual('bound handleIntersection');

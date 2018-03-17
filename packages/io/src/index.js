@@ -39,17 +39,19 @@ const ATTR_ID = 'data-io-id';
  */
 /**
  * @param {Object} [options]
- * @param {IntersectionObserverInit} [options.observer]
+ * @param {IntersectionObserverInit} [options.observerInit]
  * @param {Function} [options.onIntersection=null]
  * @param {number} [options.delay=800]
  * @param {number} [options.cancelDelay=250]
+ * @example
+ * const io = new Io({ delay: 0 });
  */
 class Io {
   /**
    * @constructor
    */
   constructor(options) {
-    const { observer, ...rest } = options || {};
+    const { observerInit, ...rest } = options || {};
     /**
      * @private
      * @type {Options}
@@ -98,7 +100,7 @@ class Io {
     // Set as null if IntersectionObserver is not supported
     // We also test the window object for server side rendering compatibility
     this.api = typeof window !== 'undefined' && window.IntersectionObserver ?
-      new IntersectionObserver(this.handleIntersection.bind(this), observer) : null;
+      new IntersectionObserver(this.handleIntersection.bind(this), observerInit) : null;
 
     if (typeof window !== 'undefined' && !window.IntersectionObserver) {
       console.warn([
@@ -187,6 +189,9 @@ class Io {
    * @member {Function}
    * @param {Element} target
    * @param {Options} [options]
+   * @example
+   * const image = document.querySelector('img');
+   * io.observe(image, { delay: 0 });
    */
   observe(target, options) {
     if (!this.api) return;
@@ -201,6 +206,9 @@ class Io {
    *
    * @member {Function}
    * @param {Element} target
+   * @example
+   * const image = document.querySelector('img');
+   * io.unobserve(image);
    */
   unobserve(target) {
     if (!this.api) return;
