@@ -5,6 +5,7 @@ const mockObserve = jest.fn();
 const mockUnobserve = jest.fn();
 const mockOnIntersection = jest.fn();
 const mockTakeRecords = jest.fn();
+const mockWarn = jest.fn();
 
 jest.useFakeTimers();
 
@@ -19,6 +20,7 @@ const mockIo = jest.spyOn(global, 'IntersectionObserver')
   }));
 const mockRaf = jest.spyOn(global, 'requestAnimationFrame');
 const mockCancelAf = jest.spyOn(global, 'cancelAnimationFrame');
+jest.spyOn(global.console, 'warn').mockImplementation(mockWarn);
 
 beforeEach(() => {
   mockIo.mockClear();
@@ -29,6 +31,7 @@ beforeEach(() => {
   mockTakeRecords.mockClear();
   mockRaf.mockClear();
   mockCancelAf.mockClear();
+  mockWarn.mockClear();
 });
 
 describe('test utilities', () => {
@@ -99,6 +102,7 @@ describe('test the mehtods', () => {
   test('should observe an element', () => {
     const target = document.createElement('div');
     io.observe(target);
+    expect(mockWarn).toHaveBeenCalled();
     expect(target.getAttribute('data-io-id')).toBeNull();
     io.observe(target, { onIntersection: jest.fn() });
     const id = target.getAttribute('data-io-id');
