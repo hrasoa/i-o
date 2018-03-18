@@ -1,13 +1,15 @@
 /**
- * Default options of our Io class.
+ * Options.
  *
  * @typedef {Object} Options
- * @property {Function} [onIntersection=null] Executed each time the intersection changes.
+ * @property {Function} [onIntersection=null]
+ * Executed each time the intersection changes.
+ * It will take the {@link #intersectionobserverentry|IntersectionObserverEntry} as argument.
  * @property {number} [delay=800]
  * Time before executing the onIntersection callback when the target instersects (in ms).
  * @property {number} [cancelDelay=250]
  * When the target goes from interescting to not-intersecting within this delay,
- * cancel the timer triggered when the target was intersecting.
+ * cancel the timer triggered when the target was intersecting (in ms).
  */
 /**
  * @constant {Options}
@@ -34,15 +36,15 @@ const ATTR_ID = 'data-io-id';
  *
  * @typedef {Object} IntersectionObserverInit
  * @property {Element} [root=null]
- * @property {string} [rootMargin='0px']
+ * @property {string} [rootMargin=0px]
  * @property {Array.<number>} [threshold=[0]]
  */
 /**
  * @param {Object} [options]
  * @param {IntersectionObserverInit} [options.observerInit]
- * @param {Function} [options.onIntersection=null]
- * @param {number} [options.delay=800]
- * @param {number} [options.cancelDelay=250]
+ * @param {Options.<onIntersection>} [options.onIntersection]
+ * @param {Options.<delay>} [options.delay]
+ * @param {Options.<cancelDelay>} [options.cancelDelay]
  * @example
  * const io = new Io({
  *   onIntersection: (entry) => {
@@ -65,13 +67,13 @@ class Io {
     this.options = { ...DEFAULT_OPTIONS, ...rest };
 
     /**
-     * Each new observer is stored in this variable
+     * Each new observer is stored in this variable.
      *
      * @private
      * @typedef {Object} Observer
-     * @property {number} lastIn Last time the observer was intersecting
-     * @property {number} lastOut Last time the observer was not intersecting anymore
-     * @property {number} timerId requestAnimationFrame id
+     * @property {number} lastIn Last time the observer was intersecting.
+     * @property {number} lastOut Last time the observer was not intersecting anymore.
+     * @property {number} timerId requestAnimationFrame id.
      * @property {Options} options
      */
     /**
@@ -128,7 +130,8 @@ class Io {
    * @property {number} intersectionRatio
    * @property {Element} target
    */
-  /** IntersectionObserver callback
+  /**
+   * IntersectionObserver callback
    *
    * @param {Array<IntersectionObserverEntry>} entries
    * @private
@@ -182,20 +185,19 @@ class Io {
   }
 
   /**
-   * Watch for an element. We also merge the current observer options
-   * with the current instance options.
+   * Watch an element.
    * {@link https://w3c.github.io/IntersectionObserver/#dom-intersectionobserver-observe}
    *
    * @member {Function}
-   * @param {Element} target
+   * @param {Element} target HTMLElement to watch
    * @param {Options} [options]
    * @public
    * @example
    * const image = document.querySelector('img');
-   * io.observe(image, { delay: 0 });
+   * io.observe(image);
    */
   observe(target, options) {
-    const opts = { options: { ...this.options, ...options } };
+    const opts = { ...this.options, ...options };
     if (!this.api || !opts.onIntersection) return;
     const id = getEntryId();
     this.observers[id] = { options: opts };
@@ -204,10 +206,11 @@ class Io {
   }
 
   /**
+   * Unwatch an element from current instance.
    * {@link https://w3c.github.io/IntersectionObserver/#dom-intersectionobserver-unobserve}
    *
    * @member {Function}
-   * @param {Element} target
+   * @param {Element} target HTMLElement to unwatch
    * @public
    * @example
    * const image = document.querySelector('img');
@@ -219,7 +222,7 @@ class Io {
   }
 
   /**
-   * Clean the instance and disconnect.
+   * Unwatch all elements from current instance.
    * {@link https://w3c.github.io/IntersectionObserver/#dom-intersectionobserver-disconnect}
    *
    * @member {Function}
@@ -243,6 +246,7 @@ class Io {
    * {@link https://w3c.github.io/IntersectionObserver/#dom-intersectionobserver-takerecords}
    *
    * @member {Function}
+   * @returns {Array<IntersectionObserverEntry>}
    * @public
    */
   takeRecords() {
