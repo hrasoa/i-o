@@ -1,19 +1,29 @@
 /**
- * Options.
- *
- * @typedef {Object} Options
- * @property {Function} [onIntersection=null]
  * Executed each time the intersection changes.
- * It will take the {@link #intersectionobserverentry|IntersectionObserverEntry} as argument.
- * @property {number} [delay=800]
+ * @typedef {Function} onIntersection
+ * @callback
+ * @param {IntersectionObserverEntry} entry
+ */
+/**
  * Time before executing the onIntersection callback when the target instersects (in ms).
- * @property {number} [cancelDelay=250]
+ * @typedef {number} delay
+ */
+/**
  * When the target goes from interescting to not-intersecting within this delay,
  * cancel the timer triggered when the target was intersecting (in ms).
+ * @typedef {number} cancelDelay
+ */
+
+/**
+ * Default observers options.
+ *
+ * @typedef {Object} Options
+ * @property {onIntersection} [onIntersection]
+ * @property {delay} [delay]
+ * @property {cancelDelay} [cancelDelay]
  */
 /**
  * @constant {Options}
- * @default
  * @private
  */
 const DEFAULT_OPTIONS = {
@@ -42,9 +52,10 @@ const ATTR_ID = 'data-io-id';
 /**
  * @param {Object} [options]
  * @param {IntersectionObserverInit} [options.observerInit]
- * @param {Options.<onIntersection>} [options.onIntersection]
- * @param {Options.<delay>} [options.delay]
- * @param {Options.<cancelDelay>} [options.cancelDelay]
+ * @param {onIntersection} options.onIntersection
+ * @param {delay} [options.delay=800]
+ * @param {cancelDelay} [options.cancelDelay=250]
+ * @class
  * @example
  * const io = new Io({
  *   onIntersection: (entry) => {

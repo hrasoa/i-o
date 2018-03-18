@@ -1,7 +1,10 @@
 toc:
   - Io
-  - name: Types
+  - name: Typedefs
     children:
       - Options
       - IntersectionObserverInit
       - IntersectionObserverEntry
+      - onIntersection
+      - delay
+      - cancelDelay
