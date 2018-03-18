@@ -33,9 +33,12 @@ beforeEach(() => {
 
 describe('test utilities', () => {
   test('should return uniq ids', () => {
-    for (let i = 0; i < 50; i += 1) {
-      expect(getUniq()).not.toEqual(getUniq());
+    const ids = [];
+    for (let i = 0; i < 1000; i += 1) {
+      ids.push(getUniq());
     }
+    const uniqs = [...new Set(ids)];
+    expect(ids.length === uniqs.length).toBeTruthy();
   });
 
   test('should return an io id', () => {
