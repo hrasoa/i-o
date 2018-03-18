@@ -205,8 +205,12 @@ class Io {
    * io.observe(image);
    */
   observe(target, options) {
+    if (!this.api) return;
     const opts = { ...this.options, ...options };
-    if (!this.api || !opts.onIntersection) return;
+    if (!opts.onIntersection) {
+      console.warn('Please provide the oIntersection callback.');
+      return;
+    }
     const id = getEntryId();
     this.observers[id] = { options: opts };
     target.setAttribute(ATTR_ID, id);
