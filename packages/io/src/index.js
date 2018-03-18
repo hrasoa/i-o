@@ -117,8 +117,7 @@ class Io {
       console.warn([
         '/!\\ Your current browser does not support IntersectionObserver.',
         'Please upgrade it or consider using a polyfill.',
-        'You can use "io.polyfill.js" we provide that includes the library with a polyfill,',
-        'or install a polyfill of your choice before using this library.',
+        'You can use "io.polyfill.js" we provide that includes the library with a polyfill.',
       ].join(' '));
     }
   }
