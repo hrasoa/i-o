@@ -208,7 +208,7 @@ class Io {
     if (!this.api) return;
     const opts = { ...this.options, ...options };
     if (!opts.onIntersection) {
-      console.warn('Please provide the oIntersection callback.');
+      console.warn('Please provide the onIntersection callback.');
       return;
     }
     const id = getEntryId();
