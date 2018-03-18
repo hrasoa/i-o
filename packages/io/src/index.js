@@ -64,9 +64,6 @@ const ATTR_ID = 'data-io-id';
  * });
  */
 class Io {
-  /**
-   * @constructor
-   */
   constructor(options) {
     const { observerInit, ...rest } = options || {};
     /**
