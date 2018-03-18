@@ -65,14 +65,6 @@ const ATTR_ID = 'data-io-id';
  * });
  */
 class Io {
-  /**
-   * @private
-   * @param {Object} [options]
-   * @param {IntersectionObserverInit} [options.observerInit]
-   * @param {onIntersection} options.onIntersection
-   * @param {delay} [options.delay]
-   * @param {cancelDelay} [options.cancelDelay]
-   */
   constructor(options) {
     const { observerInit, ...rest } = options || {};
     /**
