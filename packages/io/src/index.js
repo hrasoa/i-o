@@ -42,7 +42,7 @@ const DEFAULT_OPTIONS = {
 const ATTR_ID = 'data-io-id';
 
 /**
- * {@link https://www.w3.org/TR/intersection-observer/#dictdef-intersectionobserverinit}
+ * @see {@link https://www.w3.org/TR/intersection-observer/#dictdef-intersectionobserverinit}
  *
  * @typedef {Object} IntersectionObserverInit
  * @property {Element} [root=null]
@@ -94,7 +94,7 @@ class Io {
     this.observers = {};
 
     /**
-     * {@link https://w3c.github.io/IntersectionObserver/#dom-intersectionobserver-intersectionobserver}
+     * @see {@link https://w3c.github.io/IntersectionObserver/#dom-intersectionobserver-intersectionobserver}
      *
      * @private
      * @typedef {Object} IntersectionObserver
@@ -127,7 +127,7 @@ class Io {
   }
 
   /**
-   * {@link https://www.w3.org/TR/intersection-observer/#dictdef-intersectionobserverentryinit}
+   * @see {@link https://www.w3.org/TR/intersection-observer/#dictdef-intersectionobserverentryinit}
    *
    * @typedef {Object} IntersectionObserverEntry
    * @property {number} time
@@ -158,10 +158,10 @@ class Io {
     if (!(id && this.observers[id])) return;
 
     const { onIntersection, delay, cancelDelay } = this.observers[id].options;
-    const { isIntersecting, time } = entry;
-    // Each time the interesection changes, store the current time.
+    const { isIntersecting } = entry;
+    // Each time the intersection changes, store the current time.
     // This help us figure out when to call the onIntersection callback.
-    this.observers[id][isIntersecting ? 'lastIn' : 'lastOut'] = time;
+    this.observers[id][isIntersecting ? 'lastIn' : 'lastOut'] = entry.time;
     const { lastIn = 0, lastOut = 0 } = this.observers[id];
 
     if (isIntersecting) {
@@ -194,7 +194,7 @@ class Io {
 
   /**
    * Watch an element.
-   * {@link https://w3c.github.io/IntersectionObserver/#dom-intersectionobserver-observe}
+   * @see {@link https://w3c.github.io/IntersectionObserver/#dom-intersectionobserver-observe}
    *
    * @member {Function}
    * @param {Element} target HTMLElement to watch
@@ -215,7 +215,7 @@ class Io {
 
   /**
    * Unwatch an element from current instance.
-   * {@link https://w3c.github.io/IntersectionObserver/#dom-intersectionobserver-unobserve}
+   * @see {@link https://w3c.github.io/IntersectionObserver/#dom-intersectionobserver-unobserve}
    *
    * @member {Function}
    * @param {Element} target HTMLElement to unwatch
@@ -231,7 +231,7 @@ class Io {
 
   /**
    * Unwatch all elements from current instance.
-   * {@link https://w3c.github.io/IntersectionObserver/#dom-intersectionobserver-disconnect}
+   * @see {@link https://w3c.github.io/IntersectionObserver/#dom-intersectionobserver-disconnect}
    *
    * @member {Function}
    * @public
@@ -251,7 +251,7 @@ class Io {
   }
 
   /**
-   * {@link https://w3c.github.io/IntersectionObserver/#dom-intersectionobserver-takerecords}
+   * @see {@link https://w3c.github.io/IntersectionObserver/#dom-intersectionobserver-takerecords}
    *
    * @member {Function}
    * @returns {Array<IntersectionObserverEntry>}
