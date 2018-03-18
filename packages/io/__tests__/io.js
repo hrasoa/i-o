@@ -17,6 +17,8 @@ const mockIo = jest.spyOn(global, 'IntersectionObserver')
     unobserve: mockUnobserve,
     takeRecords: mockTakeRecords,
   }));
+const mockRaf = jest.spyOn(global, 'requestAnimationFrame');
+const mockCancelAf = jest.spyOn(global, 'cancelAnimationFrame');
 
 beforeEach(() => {
   mockIo.mockClear();
@@ -25,6 +27,8 @@ beforeEach(() => {
   mockUnobserve.mockClear();
   mockOnIntersection.mockClear();
   mockTakeRecords.mockClear();
+  mockRaf.mockClear();
+  mockCancelAf.mockClear();
 });
 
 describe('test utilities', () => {
@@ -89,34 +93,42 @@ describe('test the mehtods', () => {
     expect(mockTakeRecords).not.toHaveBeenCalled();
   });
 
-  test('disconnect should have been called once', () => {
-    io.disconnect();
-    expect(mockDisconnect).toHaveBeenCalledTimes(1);
-  });
-
-  test('should takeRecords', () => {
-    io.takeRecords();
-    expect(mockTakeRecords).toHaveBeenCalledTimes(1);
-  });
-
   test('should observe an element', () => {
     const target = document.createElement('div');
     io.observe(target);
+    expect(target.getAttribute('data-io-id')).toBeNull();
+    io.observe(target, { onIntersection: jest.fn() });
     const id = target.getAttribute('data-io-id');
     expect(id).toMatch(/^io-[\w]{9}$/);
     expect(io.observers[id]).toEqual({
-      options: { cancelDelay: 250, delay: 800, onIntersection: null },
+      options: { cancelDelay: 250, delay: 800, onIntersection: expect.any(Function) },
     });
     expect(mockObserve).toHaveBeenCalledWith(target);
   });
 
   test('should unobserve an element', () => {
     const target = document.createElement('div');
-    io.observe(target);
+    io.observe(target, { onIntersection: jest.fn() });
     const id = target.getAttribute('data-io-id');
     expect(io.observers[id]).toBeDefined();
-    io.unobserve(target, id);
+    io.unobserve(target);
     expect(mockUnobserve).toHaveBeenCalledWith(target);
+  });
+
+  test('disconnect should have been called once', () => {
+    const target = document.createElement('div');
+    io.observe(target, { onIntersection: jest.fn() });
+    const id = target.getAttribute('data-io-id');
+    io.handleEntryIntersection({ target, isIntersecting: true });
+    expect(io.observers[id].timerId).toBeDefined();
+    io.disconnect();
+    expect(mockCancelAf).toHaveBeenCalledTimes(1);
+    expect(mockDisconnect).toHaveBeenCalledTimes(1);
+  });
+
+  test('should takeRecords', () => {
+    io.takeRecords();
+    expect(mockTakeRecords).toHaveBeenCalledTimes(1);
   });
 
   test('should call handleEntryIntersection for each entries', () => {
@@ -130,8 +142,6 @@ describe('test the mehtods', () => {
 });
 
 describe('test the intersection behaviors', () => {
-  const mockRaf = jest.spyOn(global, 'requestAnimationFrame');
-  const mockCancelAf = jest.spyOn(global, 'cancelAnimationFrame');
   let io;
   let target;
   let id;
@@ -139,8 +149,6 @@ describe('test the intersection behaviors', () => {
 
   beforeEach(() => {
     io = new Io();
-    mockRaf.mockClear();
-    mockCancelAf.mockClear();
     target = document.createElement('div');
     io.observe(target, { onIntersection: mockOnIntersection });
     id = target.getAttribute('data-io-id');
