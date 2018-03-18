@@ -55,7 +55,7 @@ const ATTR_ID = 'data-io-id';
  * @param {onIntersection} options.onIntersection
  * @param {delay} [options.delay=800]
  * @param {cancelDelay} [options.cancelDelay=250]
- * @class
+ * @class Io
  * @example
  * const io = new Io({
  *   onIntersection: (entry) => {
@@ -72,8 +72,7 @@ class Io {
     /**
      * @private
      * @type {Options}
-     * @alias options
-     * @member
+     * @this Io
      */
     this.options = { ...DEFAULT_OPTIONS, ...rest };
 
@@ -90,8 +89,7 @@ class Io {
     /**
      * @private
      * @type {Object<string, Observer>}
-     * @alias observers
-     * @member
+     * @this Io
      */
     this.observers = {};
 
@@ -111,8 +109,7 @@ class Io {
     /**
      * @private
      * @type {IntersectionObserver}
-     * @alias api
-     * @member
+     * @this Io
      */
     // Set as null if IntersectionObserver is not supported
     // We also test the window object for server side rendering compatibility
