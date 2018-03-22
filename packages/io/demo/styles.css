@@ -55,7 +55,7 @@ li:before {
   grid-template-columns: 1fr 50vw 1fr;
   grid-template-rows: repeat(3, minmax(20vh,auto));
   margin-bottom: 20vh;
-  background: linear-gradient(140deg, #f5d193 20%, #8e677c 80%, #265275);
+  background: linear-gradient(140deg, #f5d193 20%, #cacaca 80%, #d8d8d8);
   color: rgba(0, 0, 0, .8);
   position: relative;
   z-index: 1;
