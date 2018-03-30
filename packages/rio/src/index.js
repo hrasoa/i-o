@@ -1,4 +1,4 @@
 import createIntersection from './createIntersection';
-import withIo from './withIo';
+import withObserver from './withObserver';
 
-export { createIntersection, withIo };
+export { createIntersection, withObserver };

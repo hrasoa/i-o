@@ -45,7 +45,7 @@ li:before {
   opacity: 0;
   transition: opacity .6s, transform .3s;
 }
-.lazy[src] {
+.lazy.is-loaded {
   opacity: 1;
   transform: translate3d(0, -10px, 0);
   box-shadow: 0 10px 58px -17px rgba(0, 0, 0, .5);

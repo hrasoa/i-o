@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import context from './io-context';
-import { withIo } from '../src';
+import { withObserver } from '../src';
 
 /* eslint-disable */
 class Sentinel extends Component {
@@ -22,4 +22,4 @@ class Sentinel extends Component {
   }
 }
 
-export default withIo(context.Consumer)(Sentinel);
+export default withObserver(context.Consumer)(Sentinel);

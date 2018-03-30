@@ -1,9 +1,9 @@
 import React from 'react';
 
-export default Consumer =>
+export default ContextComponent =>
   Component =>
     props => (
-      <Consumer>
+      <ContextComponent>
         {io => <Component {...props} io={io} />}
-      </Consumer>
+      </ContextComponent>
     );

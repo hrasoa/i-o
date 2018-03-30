@@ -1,29 +1,46 @@
-import React, { Component } from 'react';
+import React, { Component, Fragment } from 'react';
+import Helmet from 'react-helmet-async';
 import context from './io-context';
-import { withIo } from '../src';
+import { withObserver } from '../src';
 
 /* eslint-disable */
 class LazyImage extends Component {
+  constructor(props) {
+    super(props);
+    this.state = { src: null, loaded: false };
+    this.ref = React.createRef();
+  }
+
   componentDidMount() {
-    this.props.io.observe(this.ref, {
+    this.ref.current.onload = this.isLoaded.bind(this); 
+    this.props.io.observe(this.ref.current, {
       onIntersection: (entry) => {
         if (!entry.isIntersecting) return;
-        entry.target.setAttribute('src', entry.target.getAttribute('data-src'));
+        this.setState({ src: this.props.src });
         this.props.io.unobserve(entry.target);
       }
     });
   }
 
+  isLoaded() {
+    this.setState({ loaded: true });
+  }
+
   render() {
     return (
-      <img
-        alt="i will lazy load"
-        className="lazy"
-        ref={(img) => { this.ref = img; }}
-        data-src={this.props.src}
-      />
+      <Fragment>
+        <Helmet>
+          <link rel="prefetch" as="image" href={this.props.src} />
+        </Helmet>
+        <img
+          src={this.state.src}
+          alt="i will lazy load"
+          className={`lazy${this.state.loaded ? ' is-loaded' : ''}`}
+          ref={this.ref}
+        />
+      </Fragment>      
     );
   }
 }
 
-export default withIo(context.Consumer)(LazyImage);
+export default withObserver(context.Consumer)(LazyImage);
