@@ -1,6 +1,8 @@
-import React, { Component } from 'react';
+import React, { Component, Fragment } from 'react';
 import { hot } from 'react-hot-loader';
 import '@hrasoa/io/demo/styles.css';
+import LazyImage from './LazyImage';
+import Sentinel from './Sentinel';
 
 class App extends Component {
   constructor(props) {
@@ -8,6 +10,7 @@ class App extends Component {
     this.state = {
       images: [],
     };
+    this.addImages = this.addImages.bind(this);
   }
 
   addImages() {
@@ -24,14 +27,17 @@ class App extends Component {
 
   render() {
     return (
-      <ul>
-        {this.state.images.map(({ id, src }) =>
-          (
-            <li key={id}>
-              <img className="lazy" data-src={src} alt="A placeholder" />
-            </li>
-          ))}
-      </ul>
+      <Fragment>
+        <ul>
+          {this.state.images.map(({ id, src }) =>
+            (
+              <li key={id}>
+                <LazyImage src={src} />
+              </li>
+            ))}
+        </ul>
+        <Sentinel onIntersection={this.addImages} />
+      </Fragment>
     );
   }
 }
